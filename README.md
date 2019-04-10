@@ -1,1 +1,1 @@
-# media-manager
+# Media Manager
