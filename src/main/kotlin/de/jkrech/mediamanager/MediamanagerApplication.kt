@@ -2,10 +2,13 @@ package de.jkrech.mediamanager
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.boot.SpringApplication
 
 @SpringBootApplication
-class MediamanagerApplication
+//@EnableJpaRepositories
+//@EnableCaching
+open class MediamanagerApplication
 
 fun main(args: Array<String>) {
-	runApplication<MediamanagerApplication>(*args)
+	SpringApplication.run(MediamanagerApplication::class.java, *args)
 }
