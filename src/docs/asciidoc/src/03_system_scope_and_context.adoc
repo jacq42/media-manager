@@ -1,0 +1,18 @@
+[[section-system-scope-and-context]]
+== Kontextabgrenzung
+
+
+
+=== Fachlicher Kontext
+
+
+image:Manuelle Pflege_2019-04-11.png[manuell]
+
+image:Automatischer Import_2019-04-11.png[automatisch]
+
+=== Technischer Kontext
+
+
+image:Struktur.png[struktur]
+
+Externe Services zur Erfassung der Daten sind derzeit noch nicht bekannt.

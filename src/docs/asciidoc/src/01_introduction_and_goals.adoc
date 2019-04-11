@@ -1,0 +1,33 @@
+[[section-introduction-and-goals]]
+==	Einführung und Ziele
+
+
+
+=== Aufgabenstellung
+
+==== Was ist der MedienManager?
+
+Verwaltung von Medieninhalten (Bücher, CDs, MP3s etc.)
+
+==== Features
+
+* Möglichst einfache Erfassung der Inhalte (z.B. über die ISBN)
+* Gefilterte Anzeige der Inhalte
+* ...
+
+=== Qualitätsziele
+
+
+?
+
+
+=== Stakeholder
+
+
+
+[cols="1,2" options="header"]
+|===
+|Rolle |Erwartungshaltung
+| _Architekt, Entwickler_ | _Möchte sich mit der Architekturdokumentation näher beschäftigen_
+| _Anwender_ | _Will die Anwendung verstehen_ 
+|===

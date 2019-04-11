@@ -1,0 +1,14 @@
+[[section-architecture-constraints]]
+== Randbedingungen
+
+=== Organisatorische Randbedingungen
+
+Im Rahmen von https://www.100daysofcode.com/ sich näher mit Technologien beschäftigen und das eigene Wissen vertiefen.
+
+=== Technische Randbedingungen
+
+* Spring Boot Anwendung
+* Kotlin, Groovy (Spock)
+* Hexagonale Architektur, CQRS
+* Vorgehen: TDD, BDD, DDD, EventStorming, Domain Storytelling
+* Dokumentation: AsciiDoc (arc42 Template), doctoolchain (?)
