@@ -12,3 +12,10 @@ AsciiDoc:
 * https://asciidoctor.org/docs/asciidoctor-pdf/
 * Gradle Plugin: https://asciidoctor.org/docs/asciidoctor-gradle-plugin/
 * PDF: https://github.com/asciidoctor/asciidoctor-gradle-examples/tree/master/asciidoc-to-pdf-example
+
+Kotlin:
+* https://kotlinlang.org/docs/reference/
+* https://try.kotlinlang.org/
+
+Axon:
+* https://docs.axoniq.io/reference-guide/
