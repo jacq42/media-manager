@@ -2,3 +2,7 @@
 == Lösungsstrategie
 
 Siehe technische Randbedingungen.
+
+=== 1. Eventstorming "Verwaltung von Büchern"
+
+image:EventStorming_2019-04-12.jpg[eventstorming]
