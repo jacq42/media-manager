@@ -1,7 +1,7 @@
 [[section-building-block-view]]
 == Bausteinsicht
 
-
+TBD
 
 === Whitebox Gesamtsystem
 
@@ -50,7 +50,6 @@ _<Blackbox-Template>_
 
 === Ebene 2
 
-TBD
 
 ==== Whitebox _<Baustein 1>_
 
