@@ -1,7 +1,9 @@
 package de.jkrech.mediamanager.domain
 
-data class BookInitialized(val isbn: Isbn)
+interface BookEvent
 
-data class BookUpdated(val author: String?, val title: String?, val language: Language?)
+data class BookInitialized(val isbn: Isbn) : BookEvent
 
-data class BookDeleted(val isbn: Isbn)
+data class BookUpdated(val author: String?, val title: String?, val language: Language?): BookEvent
+
+data class BookDeleted(val isbn: Isbn): BookEvent

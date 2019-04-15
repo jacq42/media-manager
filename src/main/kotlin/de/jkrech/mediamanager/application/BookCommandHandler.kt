@@ -1,10 +1,11 @@
 package de.jkrech.mediamanager.application
 
-import org.axonframework.commandhandling.CommandHandler
 import de.jkrech.mediamanager.domain.Book
+import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.Repository
+import org.springframework.beans.factory.annotation.Autowired
 
-class CommandHandler(bookRepository: Repository<Book>) {
+class BookCommandHandler(@Autowired bookRepository: Repository<Book>) {
     
     val bookRepository: Repository<Book>
     
@@ -14,7 +15,7 @@ class CommandHandler(bookRepository: Repository<Book>) {
     
     @CommandHandler
     @Throws(Exception::class)
-    fun initialize(initializeBook: InitializeBook) {
+    fun initializeBook(initializeBook: InitializeBook) {
         bookRepository.newInstance({Book(initializeBook.isbn)})
     }
 }

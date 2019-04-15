@@ -6,7 +6,7 @@ import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @SpringBootTest
-class MediamanagerApplicationTests extends Specification {
+class MediamanagerApplicationSpec extends Specification {
 
 	def "context loads"() {
         expect: "true"
