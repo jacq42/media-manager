@@ -1,12 +1,10 @@
 package de.jkrech.mediamanager.domain
 
-import org.axonframework.modelling.command.AggregateIdentifier
-import org.axonframework.spring.stereotype.Aggregate
-import org.axonframework.modelling.command.AggregateRoot
-import org.axonframework.modelling.command.AggregateLifecycle.apply
 import org.axonframework.eventsourcing.EventSourcingHandler
+import org.axonframework.modelling.command.AggregateIdentifier
+import org.axonframework.modelling.command.AggregateLifecycle.apply
+import org.axonframework.spring.stereotype.Aggregate
 
-@AggregateRoot
 @Aggregate
 class Book() {
   
@@ -19,6 +17,10 @@ class Book() {
     
     constructor(isbn: Isbn) : this() {
         apply(BookInitialized(isbn))
+    }
+    
+    fun upate(author: Author?, title: Title?, language: Language?) {
+        apply(BookUpdated(author, title, language));
     }
     
     @EventSourcingHandler
