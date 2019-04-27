@@ -58,6 +58,10 @@ include::src/11_technical_risks.adoc[]
 include::src/12_glossary.adoc[]
 
 <<<<
+// 13. Test Reports
+include::src/13_test_reports.adoc[]
+
+<<<<
 
 Erstellt mit Hilfe von:
 

@@ -33,33 +33,33 @@ class BookEventsSpec extends Specification {
     }
 
     def "sends an event on creation"() {
-        when: "a book is initialized"
+        when: "a book was initialized"
         def fixtureGivenWhen = fixture.given().when(new InitializeBook(isbn))
 
-        then: "we get the expected events"
+        then: "we get a BookInitialized event"
         fixtureGivenWhen
             .expectSuccessfulHandlerExecution()
             .expectEvents(new BookInitialized(isbn))
     }
 
     def "sends an event on update"() {
-        given: "a book"
+        given: "an initialized book"
         def fixtureGiven = fixture.given(new BookInitialized(isbn))
 
-        when: "the book is updated"
+        when: "the book was updated"
         def fixtureGivenWhen = fixtureGiven.when(new UpdateBook(isbn, author, title, language))
 
-        then: "we get the expected events"
+        then: "we get a BookUpdated event"
         fixtureGivenWhen
             .expectSuccessfulHandlerExecution()
             .expectEvents(new BookUpdated(author, title, language))
     }
 
     def "update without initialize should fail"() {
-        when: "an uninitialized book is updated"
+        when: "an uninitialized book was updated"
         def fixtureGivenWhen = fixture.given().when(new UpdateBook(isbn, author, title, language))
 
-        then: "we get the expected events"
+        then: "we get an AggregateNotFoundException"
         fixtureGivenWhen
             .expectNoEvents()
             .expectException(AggregateNotFoundException.class)

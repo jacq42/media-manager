@@ -27,23 +27,30 @@ class BookSpec extends Specification {
     private Language language = language()
 
     def "a book can be initialized"() {
-        when: "initializing the book"
+        when: "a BookInitialized event was caught"
         initializeBook()
 
-        then: "the book is initialized"
+        then: "the isbn has been initialized"
         isbn == book.isbn
     }
 
-    def "a book can be updated"() {
+    def "the values of a book can be updated"() {
         given: "an initialized book"
         initializeBook()
 
-        when: "the book is updated"
+        when: "a BookUpdated event was caught"
         book.updated(new BookUpdated(author, title, language))
 
-        then: "the values are updated"
+        then: "the author has been updated"
+        book.author != null
         author == book.author
+
+        and: "the title has been updated"
+        book.title != null
         title == book.title
+
+        and: "the language has been updated"
+        book.language != null
         language == book.language
     }
 
