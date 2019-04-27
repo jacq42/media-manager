@@ -23,7 +23,7 @@ class BookCommandHandler(@Autowired bookRepository: Repository<Book>) {
     @CommandHandler
     @Throws(Exception::class)
     fun updateBook(updateBook: UpdateBook) {
-        var book: Aggregate<Book> = bookRepository.load(updateBook.isbn.toString())
-        book.invoke{ it.upate(updateBook.author, updateBook.title, updateBook.language)}
+        bookRepository.load(updateBook.isbn.toString())
+            .invoke{ book -> book.upate(updateBook.author, updateBook.title, updateBook.language)}
     }
 }

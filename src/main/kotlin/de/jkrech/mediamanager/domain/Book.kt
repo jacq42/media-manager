@@ -24,7 +24,14 @@ class Book() {
     }
     
     @EventSourcingHandler
-    fun initialize(bookInitialized: BookInitialized) {
+    fun initialized(bookInitialized: BookInitialized) {
         this.isbn = bookInitialized.isbn
+    }
+    
+    @EventSourcingHandler
+    fun updated(bookUpdated: BookUpdated) {
+        this.author = bookUpdated.author
+        this.title = bookUpdated.title
+        this.language = bookUpdated.language
     }
 }

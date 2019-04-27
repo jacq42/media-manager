@@ -1,10 +1,16 @@
 package de.jkrech.mediamanager.domain
 
+import static de.jkrech.mediamanager.TestFactory.author
+import static de.jkrech.mediamanager.TestFactory.isbn
+import static de.jkrech.mediamanager.TestFactory.language
+import static de.jkrech.mediamanager.TestFactory.title
 import static org.junit.Assert.*
 
+import org.axonframework.modelling.command.AggregateNotFoundException
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.aggregate.FixtureConfiguration
 
+import de.jkrech.mediamanager.TestFactory
 import de.jkrech.mediamanager.application.BookCommandHandler
 import de.jkrech.mediamanager.application.InitializeBook
 import de.jkrech.mediamanager.application.UpdateBook
@@ -13,47 +19,35 @@ import spock.lang.Specification
 
 class BookSpec extends Specification {
 
-    private FixtureConfiguration<Book> fixture;
+    private Book book = new Book()
 
-    def setup() {
-        fixture = new AggregateTestFixture<>(Book.class)
-        def commandHandler = new BookCommandHandler(fixture.getRepository())
-        fixture.registerAnnotatedCommandHandler(commandHandler)
+    private Isbn isbn = isbn()
+    private Author author = author()
+    private Title title = title()
+    private Language language = language()
+
+    def "a book can be initialized"() {
+        when: "initializing the book"
+        initializeBook()
+
+        then: "the book is initialized"
+        isbn == book.isbn
     }
 
-    def "sends an event on creation"() {
-        given: "an isbn"
-        def isbn = new Isbn("123")
-
-        when: "a book is initialized"
-        def fixtureGivenWhen = fixture.given().when(new InitializeBook(isbn))
-
-        then: "we get the expected events"
-        fixtureGivenWhen.expectEvents(new BookInitialized(isbn))
-    }
-
-    def "sends an event on update"() {
-        given: "an isbn"
-        def isbn = new Isbn("123")
-        def author = author()
-        def title = title()
-        def language = Language.DE
-
-        and: "a book"
-        def fixtureGiven = fixture.given(new BookInitialized(isbn))
+    def "a book can be updated"() {
+        given: "an initialized book"
+        initializeBook()
 
         when: "the book is updated"
-        def fixtureGivenWhen = fixtureGiven.when(new UpdateBook(isbn, author, title, language))
+        book.updated(new BookUpdated(author, title, language))
 
-        then: "we get the expected events"
-        fixtureGivenWhen.expectEvents(new BookUpdated(author, title, language))
+        then: "the values are updated"
+        author == book.author
+        title == book.title
+        language == book.language
     }
 
-    def author() {
-        new Author("author name")
-    }
-
-    def title() {
-        new Title("book title")
+    private def initializeBook() {
+        book.initialized(new BookInitialized(isbn))
     }
 }
