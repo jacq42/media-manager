@@ -2,6 +2,8 @@
 
 gradle clean asciidoctor
 
+Debug: gradle bootRun --debug-jvm
+
 ## Nützliche Links:
 
 100daysOfCode: 

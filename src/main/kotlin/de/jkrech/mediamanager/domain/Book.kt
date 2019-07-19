@@ -3,7 +3,7 @@ package de.jkrech.mediamanager.domain
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class Book() {
+open class Book() {
   
     lateinit var isbn: Isbn
     

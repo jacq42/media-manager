@@ -9,7 +9,7 @@ import spock.lang.Specification
 class TestFactory extends Specification {
 
     static Isbn isbn() {
-        new Isbn("123")
+        new Isbn("978-1-491-98636-3")
     }
 
     static Author author() {

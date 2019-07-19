@@ -9,6 +9,7 @@ import org.axonframework.modelling.command.AggregateNotFoundException
 import org.axonframework.test.aggregate.AggregateTestFixture
 import org.axonframework.test.aggregate.FixtureConfiguration
 
+import de.jkrech.mediamanager.application.BookWriteService
 import de.jkrech.mediamanager.domain.Author
 import de.jkrech.mediamanager.domain.Book
 import de.jkrech.mediamanager.domain.BookInitialized
@@ -29,7 +30,7 @@ class BookEventsSpec extends Specification {
 
     def setup() {
         fixture = new AggregateTestFixture<>(BookAggregate.class)
-        def commandHandler = new BookService(fixture.getRepository())
+        def commandHandler = new BookWriteService(fixture.getRepository())
         fixture.registerAnnotatedCommandHandler(commandHandler)
     }
 

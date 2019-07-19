@@ -21,10 +21,10 @@ class BookCommandHandlerSpec extends Specification {
     private Repository<BookAggregate> bookRepository = Mock()
 
     @Shared
-    private BookService bookCommandHandler
+    private BookWriteService bookCommandHandler
 
     def setup() {
-        bookCommandHandler = new BookService(bookRepository)
+        bookCommandHandler = new BookWriteService(bookRepository)
     }
 
     def "a new aggregate can be loaded from the repository"() {
