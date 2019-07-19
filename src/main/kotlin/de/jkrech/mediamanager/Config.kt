@@ -11,23 +11,24 @@ import org.axonframework.eventsourcing.EventSourcingRepository
 import de.jkrech.mediamanager.domain.Book
 import org.axonframework.commandhandling.SimpleCommandBus
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway
+import de.jkrech.mediamanager.application.BookAggregate
 
 @Configuration
-class Config {
+open class Config {
     
     @Bean
     @Throws(SQLException::class)
-    fun embeddedEventStore() : EventStore {
+    open fun embeddedEventStore() : EventStore {
         return EmbeddedEventStore.builder().storageEngine(InMemoryEventStorageEngine()).build()
     }
 
     @Bean
-    fun commandBus() : SimpleCommandBus {
+    open fun commandBus() : SimpleCommandBus {
         return SimpleCommandBus.builder().build();
     }
 
     @Bean
-    fun commandGateway() : DefaultCommandGateway {
+    open fun commandGateway() : DefaultCommandGateway {
         return DefaultCommandGateway.builder().commandBus(commandBus()).build();
     }
 
@@ -40,7 +41,7 @@ class Config {
      */
     @Bean("bookRepository")
     @Throws(SQLException::class)
-    fun eventSourcingRepository() : Repository<Book> {
-        return EventSourcingRepository.builder(Book::class.java).eventStore(embeddedEventStore()).build();
+    open fun eventSourcingRepository() : Repository<BookAggregate> {
+        return EventSourcingRepository.builder(BookAggregate::class.java).eventStore(embeddedEventStore()).build();
     }
 }

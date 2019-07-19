@@ -19,8 +19,6 @@ import spock.lang.Specification
 
 class BookSpec extends Specification {
 
-    private Book book = new Book()
-
     private Isbn isbn = isbn()
     private Author author = author()
     private Title title = title()
@@ -28,7 +26,7 @@ class BookSpec extends Specification {
 
     def "a book can be initialized"() {
         when: "a BookInitialized event was caught"
-        initializeBook()
+        Book book = initializeBook()
 
         then: "the isbn has been initialized"
         isbn == book.isbn
@@ -36,10 +34,10 @@ class BookSpec extends Specification {
 
     def "the values of a book can be updated"() {
         given: "an initialized book"
-        initializeBook()
+        Book book = initializeBook()
 
         when: "a BookUpdated event was caught"
-        book.updated(new BookUpdated(author, title, language))
+        book.update(new BookUpdated(author, title, language))
 
         then: "the author has been updated"
         book.author != null
@@ -55,6 +53,6 @@ class BookSpec extends Specification {
     }
 
     private def initializeBook() {
-        book.initialized(new BookInitialized(isbn))
+        new Book(isbn)
     }
 }

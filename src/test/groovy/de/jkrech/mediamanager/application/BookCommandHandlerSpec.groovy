@@ -20,7 +20,7 @@ class BookCommandHandlerSpec extends Specification {
     private InitializeBook initializeBookCommand = new InitializeBook(isbn)
     private UpdateBook updateBookCommand = new UpdateBook(isbn, author(), title(), language())
 
-    private Repository<Book> bookRepository = Mock()
+    private Repository<BookAggregate> bookRepository = Mock()
 
     @Shared
     private BookCommandHandler bookCommandHandler
