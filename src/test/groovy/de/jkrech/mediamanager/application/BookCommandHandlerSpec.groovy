@@ -4,12 +4,10 @@ import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn
 import static de.jkrech.mediamanager.TestFactory.language
 import static de.jkrech.mediamanager.TestFactory.title
-import static org.junit.Assert.*
 
 import org.axonframework.modelling.command.Aggregate
 import org.axonframework.modelling.command.Repository
 
-import de.jkrech.mediamanager.domain.Book
 import de.jkrech.mediamanager.domain.Isbn
 import spock.lang.Shared
 import spock.lang.Specification
@@ -23,10 +21,10 @@ class BookCommandHandlerSpec extends Specification {
     private Repository<BookAggregate> bookRepository = Mock()
 
     @Shared
-    private BookCommandHandler bookCommandHandler
+    private BookService bookCommandHandler
 
     def setup() {
-        bookCommandHandler = new BookCommandHandler(bookRepository)
+        bookCommandHandler = new BookService(bookRepository)
     }
 
     def "a new aggregate can be loaded from the repository"() {

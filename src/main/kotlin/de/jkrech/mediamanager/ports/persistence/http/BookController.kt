@@ -13,11 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable
 @RequestMapping("/books")
 class BookController {
     
-    @GetMapping
-    fun getAll(): ResponseEntity<List<String>> {
-        return ResponseEntity(NOT_IMPLEMENTED)
-    }
-    
     @PostMapping
     fun create(): ResponseEntity<String> {
         return ResponseEntity("create", NOT_IMPLEMENTED)
@@ -27,5 +22,10 @@ class BookController {
     @RequestMapping("{isbn}")
     fun update(@PathVariable isbn: String): ResponseEntity<String> {
         return ResponseEntity("update " + isbn, NOT_IMPLEMENTED)
+    }
+    
+    @GetMapping
+    fun getAll(): ResponseEntity<List<String>> {
+        return ResponseEntity(NOT_IMPLEMENTED)
     }
 }
