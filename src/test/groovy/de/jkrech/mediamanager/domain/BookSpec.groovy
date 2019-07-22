@@ -42,6 +42,17 @@ class BookSpec extends Specification {
         language == book.language
     }
 
+    def "the isbn can not be changed"() {
+        given: "an initialized book"
+        Book book = initializeBook()
+
+        when: "a BookUpdated event was caught"
+        book.update(new BookUpdated(author, title, language))
+
+        then: "the isbn is the same"
+        isbn == book.isbn
+    }
+
     private def initializeBook() {
         new Book(isbn)
     }

@@ -25,10 +25,14 @@ class BookController @Autowired constructor(
     
     @PostMapping
     fun create(@RequestBody bookJson: BookJson): ResponseEntity<String> {
-        val isbn = Isbn(bookJson.isbn)
-        val initializeBookCmd = InitializeBook(isbn)
-        val result: Boolean = commandGateway.sendAndWait(initializeBookCmd)
-        return if (result) ResponseEntity(isbn.isbn, CREATED) else ResponseEntity(CONFLICT)
+        try {
+            val isbn = Isbn(bookJson.isbn)
+            val initializeBookCmd = InitializeBook(isbn)
+            val result: Boolean = commandGateway.sendAndWait(initializeBookCmd)
+            if (result) return ResponseEntity(isbn.isbn, CREATED)
+        } catch(e: IllegalArgumentException) {
+        }
+        return ResponseEntity(CONFLICT)
     }
     
     @PutMapping

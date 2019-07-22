@@ -22,6 +22,7 @@ class BookWriteService(@Autowired bookEventSourcingRepository: Repository<BookAg
             bookEventSourcingRepository.newInstance({BookAggregate(initializeBook.isbn)})
             return true
         } catch (e: Exception) {
+            // TODO throw an exception?
             return false
         }
     }

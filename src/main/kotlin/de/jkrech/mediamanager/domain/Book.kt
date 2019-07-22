@@ -1,18 +1,15 @@
 package de.jkrech.mediamanager.domain
 
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.slf4j.LoggerFactory.getLogger
 
-open class Book() {
+open class Book(val isbn: Isbn) {
   
-    lateinit var isbn: Isbn
-    
     var author: Author? = null
     var title: Title? = null
     var language: Language? = null
     
-    constructor(isbn: Isbn) : this() {
-        this.isbn = isbn
+    init {
         LOGGER.info("book initialized with {}", isbn)
     }
     
@@ -24,6 +21,6 @@ open class Book() {
     }
     
     companion object {
-        val LOGGER: Logger = LoggerFactory.getLogger(Book::class.java)
+        val LOGGER: Logger = getLogger(Book::class.java)
     }
 }
