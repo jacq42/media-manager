@@ -1,8 +1,8 @@
 # Media Manager
 
-gradle clean asciidoctor
-
-Debug: gradle bootRun --debug-jvm
+* build: gradle clean asciidoctor
+* run with debug: gradle bootRun --debug-jvm
+* pitest: gradle pitest
 
 ## Nützliche Links:
 
@@ -28,3 +28,14 @@ Hexagonal architecture:
 BDD Reports / Testing
 * http://spockframework.org/
 * https://github.com/renatoathaydes/spock-reports
+
+Mutation Testing
+* http://pitest.org/
+* https://github.com/hcoles/pitest/
+
+## Issues
+
+Kotlin und Groovy vertragen sich nicht so wirklich in einem Eclipse Projekt
+- die Sourcen von Kotlin landen nicht im bin Folder
+- Groovy kann sie dann nicht finden
+- mögliche Lösung: add kotlin nature erneut ausführen (?)
