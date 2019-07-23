@@ -54,12 +54,31 @@ class BookControllerSpec extends Specification {
         when: "post the json"
         ResponseEntity<String> response = bookController.create(jsonBook)
 
-        then: "a cmd is created"
+        then: "the status is CONFLICT"
+        response.status == CONFLICT
+        response.body == null
+    }
+
+    def "returns CONFLICT if there is an exception"() {
+        given: "a command gateway"
+        0 * commandGateway.sendAndWait(_)
+
+        and: "a json with an invalid isbn"
+        BookJson jsonBook = jsonBook("invalid")
+
+        when: "call the method"
+        ResponseEntity<String> response = bookController.create(jsonBook)
+
+        then: "the status is CONFLICT"
         response.status == CONFLICT
         response.body == null
     }
 
     private BookJson jsonBook() {
-        new BookJson(ISBN, AUTHOR, TITLE, LANGUAGE)
+        jsonBook(ISBN)
+    }
+
+    private BookJson jsonBook(String isbn) {
+        new BookJson(isbn, AUTHOR, TITLE, LANGUAGE)
     }
 }

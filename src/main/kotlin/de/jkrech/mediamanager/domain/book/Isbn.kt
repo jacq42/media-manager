@@ -7,7 +7,7 @@ class Isbn(val isbn: String) {
             // TODO Prüfziffern:
             // - https://www.buecher-wiki.de/index.php/BuecherWiki/ISBN
             // - https://de.wikipedia.org/wiki/Internationale_Standardbuchnummer
-            throw IllegalArgumentException("invalid ISBN")
+            throw InvalidIsbnException("invalid ISBN")
         }
     }
     

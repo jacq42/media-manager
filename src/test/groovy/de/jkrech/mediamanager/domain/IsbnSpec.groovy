@@ -16,7 +16,7 @@ class IsbnSpec extends Specification {
         new Isbn(isbn)
 
         then: "throws an exception"
-        thrown(IllegalArgumentException.class)
+        thrown(InvalidIsbnException.class)
 
         where:
         isbn << ["", "123"]
@@ -28,7 +28,7 @@ class IsbnSpec extends Specification {
         new Isbn(isbn)
 
         then: "does not throws an exception"
-        notThrown(IllegalArgumentException.class)
+        notThrown(InvalidIsbnException.class)
 
         where:
         isbn << ["978-1-491-98636-3", "3-86631-007-2"]
