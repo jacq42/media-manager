@@ -46,10 +46,16 @@ class BookController @Autowired constructor(
         return ResponseEntity("update " + isbn, NOT_IMPLEMENTED)
     }
     
-    @GetMapping("{isbn}")
-    fun get(@PathVariable isbn: String): ResponseEntity<BookJson> {
+    @GetMapping("{isbnAsString}")
+    fun get(@PathVariable isbnAsString: String): ResponseEntity<BookJson> {
         // TODO klären: readService direkt oder QueryBus?
-        return ResponseEntity(BookJson("isbn", "", "", ""), HttpStatus.OK)
+        try {
+          val isbn = Isbn(isbnAsString)
+          return ResponseEntity(BookJson(isbn.isbn, "", "", ""), HttpStatus.OK)
+        } catch (e: InvalidIsbnException) {
+          LOGGER.error("Invalid isbn {}", isbnAsString)
+        }
+        return ResponseEntity(HttpStatus.BAD_REQUEST)
     }
     
     @GetMapping

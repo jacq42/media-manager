@@ -8,3 +8,6 @@
 *.gradle/
 /build/
 /*.sh
+
+#
+/backlog.txt
