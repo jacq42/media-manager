@@ -9,9 +9,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+/**
+ * Contains the read model
+ */
 @Service
 class BookReadService(@Autowired val bookReadRepository: BookReadRepository) {
-    
+
     fun bookBy(isbn: Isbn): BookJson {
         val bookDto = bookReadRepository.findByIsbn(isbn)
         return toBook(bookDto)

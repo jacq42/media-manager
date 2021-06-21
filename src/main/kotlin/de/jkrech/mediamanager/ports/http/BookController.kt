@@ -41,12 +41,12 @@ class BookController @Autowired constructor(
     
     @PutMapping("{isbn}")
     fun update(@PathVariable isbn: String): ResponseEntity<String> {
-        return ResponseEntity("update " + isbn, NOT_IMPLEMENTED)
+        return ResponseEntity("update $isbn", NOT_IMPLEMENTED)
     }
     
     @GetMapping("{isbnAsString}")
     fun get(@PathVariable isbnAsString: String): ResponseEntity<BookJson> {
-        // TODO klären: readService direkt oder QueryBus?
+        // TODO klären: readService direkt oder QueryBus? -> QueryBus, denn der readService lädt das Aggregate mit allen Events
         try {
           val isbn = Isbn(isbnAsString)
           return ResponseEntity(BookJson(isbn.isbn, "", "", ""), HttpStatus.OK)
