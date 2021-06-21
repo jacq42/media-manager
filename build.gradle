@@ -4,23 +4,29 @@ plugins {
 	id 'org.jetbrains.kotlin.jvm' version '1.5.10'
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.5.10'
 	id 'groovy'
+    id 'idea'
     id 'org.asciidoctor.jvm.convert' version '3.3.0'
     id 'info.solidsoft.pitest' version '1.5.1'
 }
 
 group = 'de.jkrech'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
 	mavenCentral()
-    jcenter()
 }
 
 sourceSets {
     main.kotlin.srcDirs += 'src/main/kotlin'
     test.groovy.srcDirs += 'src/test/groovy'
 }
+
+def axonVersion = '4.5.2'
+def groovyVersion = '3.0.8'
+def spockVersion = '2.0-groovy-3.0'
+def spockReportsVersion = '2.0-groovy-3.0'
 
 dependencies {
 	// spring
@@ -35,7 +41,7 @@ dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 	
 	// axon
-	implementation("org.axonframework:axon-spring-boot-starter:4.5.2") {
+	implementation("org.axonframework:axon-spring-boot-starter:${axonVersion}") {
         exclude group: 'org.axonframework', module: 'axon-server-connector'
     }
     
@@ -43,20 +49,25 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
     
     // axon test
-	testImplementation 'org.axonframework:axon-test:4.5.2'
+	testImplementation "org.axonframework:axon-test:${axonVersion}"
     
 	// groovy, spock
-    testImplementation group: 'org.codehaus.groovy', name: 'groovy', version: '3.0.8'
-    testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.0-groovy-3.0'
-    testImplementation group: 'org.spockframework', name: 'spock-spring', version: '2.0-groovy-3.0'
+    testImplementation "org.codehaus.groovy:groovy-all:${groovyVersion}"
+    testImplementation "org.spockframework:spock-core:${spockVersion}"
+    testImplementation "org.spockframework:spock-spring:${spockVersion}"
+    testImplementation( "com.athaydes:spock-reports:${spockReportsVersion}" ) {
+        transitive = false // this avoids affecting your version of Groovy/Spock
+    }
 
     runtimeOnly 'com.h2database:h2:1.4.197'
 }
 
 compileKotlin {
-	kotlinOptions {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+    kotlinOptions {
 		freeCompilerArgs = ['-Xjsr305=strict']
-		jvmTarget = '11'
+		jvmTarget = JavaVersion.VERSION_11
 	}
 }
 
@@ -75,7 +86,6 @@ asciidoctor {
 
 test {
     useJUnitPlatform()
-    systemProperty 'com.athaydes.spockframework.report.showCodeBlocks', false
 }
 
 pitest {

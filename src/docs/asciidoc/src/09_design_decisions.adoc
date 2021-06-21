@@ -1,4 +1,13 @@
 [[section-design-decisions]]
 == Entwurfsentscheidungen
 
-TBD
+ADR (Architecture Decision Records) auflisten
+
+siehe dazu auch::
+* http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions
+* https://github.com/npryce/adr-tools
+
+// Anstatt die ADRs einzeln aufzulisten, können sie auch gesammelt werden: https://doctoolchain.github.io/docToolchain/#_collectincludes
+
+include::../arch/0001_adr_documentation.adoc[]
+

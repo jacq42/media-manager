@@ -1,0 +1,23 @@
+===	1. Architekturentscheidungen sollen dokumentiert werden
+
+Datum: 2021-06-21
+
+==== State
+
+// Akzeptiert, Abgelehnt, In Diskussion
+Akzeptiert
+
+==== Kontext
+
+* ADRs sind kleine Textdateien innerhalb des Projekt Repos
+* Es wird ein leichtgewichtiges Format (Markdown) verwendet
+* Die Entscheidungen werden fortlaufend nummeriert (beginnend mit 0001)
+* Wenn eine Entscheidung zurückgenommen wird, bleibt das Textfile erhalten (nur so lassen sich die Entscheidungen nachvollziehen)
+
+==== Entscheidung
+
+Alle Entscheidungen werden dokumentiert (so wie diese hier)
+
+==== Konsequenzen
+
+* ALLE Entscheidungen MÜSSEN festgehalten werden
