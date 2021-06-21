@@ -1,8 +1,8 @@
-===	1. Architekturentscheidungen sollen dokumentiert werden
+===	Architekturentscheidungen sollen dokumentiert werden
 
 Datum: 2021-06-21
 
-==== State
+==== Status
 
 // Akzeptiert, Abgelehnt, In Diskussion
 Akzeptiert

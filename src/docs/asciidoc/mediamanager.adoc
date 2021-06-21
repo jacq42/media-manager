@@ -2,7 +2,6 @@
 // toc-title definition MUST follow document title without blank line!
 :toc-title: Inhaltsverzeichnis
 
-
 // configure DE settings for asciidoc
 include::src/config.adoc[]
 

@@ -11,3 +11,7 @@ siehe dazu auch::
 
 include::../arch/0001_adr_documentation.adoc[]
 
+include::../arch/0002_adr_hexagonal_architecture.adoc[]
+
+include::../arch/0003_adr_cqrs.adoc[]
+
