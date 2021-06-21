@@ -1,5 +1,6 @@
 package de.jkrech.mediamanager.application
 
+
 import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn
 import static de.jkrech.mediamanager.TestFactory.language
@@ -11,14 +12,17 @@ import org.axonframework.test.aggregate.FixtureConfiguration
 
 import de.jkrech.mediamanager.application.BookWriteService
 import de.jkrech.mediamanager.domain.Author
-import de.jkrech.mediamanager.domain.Book
-import de.jkrech.mediamanager.domain.BookInitialized
-import de.jkrech.mediamanager.domain.BookUpdated
-import de.jkrech.mediamanager.domain.Isbn
+import de.jkrech.mediamanager.domain.book.Book
+import de.jkrech.mediamanager.domain.book.BookInitialized
+import de.jkrech.mediamanager.domain.book.BookUpdated
+import de.jkrech.mediamanager.domain.book.Isbn
 import de.jkrech.mediamanager.domain.Language
 import de.jkrech.mediamanager.domain.Title
 import spock.lang.Specification
 
+/**
+ * Test the handling of commands: Sending a command should create an event (or not if the command is invalid)
+ */
 class BookEventsSpec extends Specification {
 
     private FixtureConfiguration<Book> fixture;
@@ -29,7 +33,7 @@ class BookEventsSpec extends Specification {
     private Language language = language()
 
     def setup() {
-        fixture = new AggregateTestFixture<>(BookAggregate.class)
+        fixture = new AggregateTestFixture<>(Book.class)
         def commandHandler = new BookWriteService(fixture.getRepository())
         fixture.registerAnnotatedCommandHandler(commandHandler)
     }

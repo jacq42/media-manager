@@ -1,4 +1,4 @@
-package de.jkrech.mediamanager.domain
+package de.jkrech.mediamanager.domain.book
 
 import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn

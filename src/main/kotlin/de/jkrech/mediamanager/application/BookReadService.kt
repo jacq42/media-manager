@@ -1,19 +1,20 @@
 package de.jkrech.mediamanager.application
 
-import de.jkrech.mediamanager.domain.Book
-import de.jkrech.mediamanager.domain.BookInitialized
+import de.jkrech.mediamanager.domain.book.BookInitialized
+import de.jkrech.mediamanager.domain.book.Isbn
+import de.jkrech.mediamanager.ports.http.BookJson
 import org.axonframework.eventhandling.EventHandler
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service
-import de.jkrech.mediamanager.domain.Isbn
-import de.jkrech.mediamanager.domain.Language
-import de.jkrech.mediamanager.ports.http.BookJson
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
+/**
+ * Contains the read model
+ */
 @Service
 class BookReadService(@Autowired val bookReadRepository: BookReadRepository) {
-    
+
     fun bookBy(isbn: Isbn): BookJson {
         val bookDto = bookReadRepository.findByIsbn(isbn)
         return toBook(bookDto)
@@ -21,7 +22,7 @@ class BookReadService(@Autowired val bookReadRepository: BookReadRepository) {
     
     @EventHandler
     fun bookInitialized(bookInitialized: BookInitialized) {
-        LOGGER.info("book initialized: " + bookInitialized)
+        LOGGER.info("book initialized: {}", bookInitialized)
         val bookDto = BookDto(bookInitialized.isbn.isbn, "", "", "")
         bookReadRepository.save(bookDto)
     }

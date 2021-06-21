@@ -1,0 +1,28 @@
+===	Hexagonale Architektur
+
+Datum: 2021-06-21
+
+==== Status
+
+// Akzeptiert, Abgelehnt, In Diskussion
+Akzeptiert
+
+==== Kontext
+
+Wie soll die Software geschnitten werden?
+Im Mittelpunkt steht die Domäne. Dies kann mit der Hexagonalen Architektur sehr schön umgesetzt werden. Im Package
+**domain** sind alle Domänenobjekte enthalten. Domänenevents gehören auch in dieses Package.\
+Das Package **application** enthält die Services und Commands.\
+Das Package **ports** enthält die Ports und Adapter. Ein Controller ist ein Adapter.
+
+==== Entscheidung
+
+* Umsetzung in der Hexagonalen Architektur
+* Da das Axon Framework hauptsächlich über Annotation arbeitet, sind dies in der Domäne erlaubt.
+
+==== Konsequenzen
+
+* **domain** enthält nur die Fachlogik
+* Keine Frameworks innerhalb der Domäne (Ausname: Axon)
+* **applicatio** enthält Commands, Services, Interfaces für Repositories
+* **ports** enthält Adapter nach außen (Controller, Repositories, ...)

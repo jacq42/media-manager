@@ -1,4 +1,4 @@
 [[section-glossary]]
 == Test Reports
 
-link:../../spock-reports/index.html[Link zu den Reports]
+link:../spock-reports/index.html[Link zu den Reports]

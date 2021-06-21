@@ -1,7 +1,7 @@
 package de.jkrech.mediamanager
 
 import de.jkrech.mediamanager.domain.Author
-import de.jkrech.mediamanager.domain.Isbn
+import de.jkrech.mediamanager.domain.book.Isbn
 import de.jkrech.mediamanager.domain.Language
 import de.jkrech.mediamanager.domain.Title
 import spock.lang.Specification

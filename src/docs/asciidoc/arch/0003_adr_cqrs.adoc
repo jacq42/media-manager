@@ -1,0 +1,27 @@
+===	CQRS
+
+Datum: 2021-06-21
+
+==== Status
+
+// Akzeptiert, Abgelehnt, In Diskussion
+Akzeptiert
+
+==== Kontext
+
+CQRS = Command-Query-Responsibility-Segregation
+
+* Command: kommt (von außen) in das System
+* (Domänen-)Event: wird erstellt, wenn die Bedingungen zulässig sind und im Eventstore gespeichert
+* Query: fragt den aktuellen Status des Aggregates ab
+
+==== Entscheidung
+
+* Umsetzung mittels CQRS und Eventstore
+* Umsetzung mit link:https://axoniq.io/product-overview/axon-framework[Axon Framework]
+
+==== Konsequenzen
+
+* Aggregate lässt sich nur über Events bauen
+* Events werden durch Commands ausgelöst (nach Prüfen der Bedingungen)
+* Axon Framework ist in der Domäne enthalten (da über Annotation umgesetzt)

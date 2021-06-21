@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-import de.jkrech.mediamanager.application.BookAggregate
 import de.jkrech.mediamanager.application.InitializeBook
-import de.jkrech.mediamanager.domain.Isbn
-import de.jkrech.mediamanager.domain.InvalidIsbnException
+import de.jkrech.mediamanager.domain.book.Isbn
+import de.jkrech.mediamanager.domain.book.InvalidIsbnException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
-import org.axonframework.queryhandling.QueryGateway
 
 @RestController
 @RequestMapping("/books")
@@ -43,12 +41,12 @@ class BookController @Autowired constructor(
     
     @PutMapping("{isbn}")
     fun update(@PathVariable isbn: String): ResponseEntity<String> {
-        return ResponseEntity("update " + isbn, NOT_IMPLEMENTED)
+        return ResponseEntity("update $isbn", NOT_IMPLEMENTED)
     }
     
     @GetMapping("{isbnAsString}")
     fun get(@PathVariable isbnAsString: String): ResponseEntity<BookJson> {
-        // TODO klären: readService direkt oder QueryBus?
+        // TODO klären: readService direkt oder QueryBus? -> QueryBus, denn der readService lädt das Aggregate mit allen Events
         try {
           val isbn = Isbn(isbnAsString)
           return ResponseEntity(BookJson(isbn.isbn, "", "", ""), HttpStatus.OK)

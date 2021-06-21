@@ -6,3 +6,7 @@ Siehe technische Randbedingungen.
 === 1. Eventstorming "Verwaltung von Büchern"
 
 image:EventStorming_2019-04-12.jpg[eventstorming]
+
+* Commands zum Erstellen/Aktualisieren von Büchern kommen über einen REST Endpunkt an
+* Events werden erstellt, wenn zulässig -> Werden derzeit in einer InMemoryEventStorageEngine gespeichert
+** TODO: JpaEventStorageEngine verwenden

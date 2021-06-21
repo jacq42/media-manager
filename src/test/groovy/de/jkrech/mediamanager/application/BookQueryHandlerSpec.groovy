@@ -10,7 +10,7 @@ import org.axonframework.modelling.command.Repository
 
 import de.jkrech.mediamanager.application.BookDto
 import de.jkrech.mediamanager.ports.http.BookJson
-import de.jkrech.mediamanager.domain.Isbn
+import de.jkrech.mediamanager.domain.book.Isbn
 
 import spock.lang.Shared
 import spock.lang.Specification

@@ -1,6 +1,6 @@
 package de.jkrech.mediamanager.application
 
-import de.jkrech.mediamanager.domain.Isbn
+import de.jkrech.mediamanager.domain.book.Isbn
 import org.springframework.data.repository.NoRepositoryBean
 import org.springframework.data.repository.Repository
 import org.springframework.lang.Nullable
