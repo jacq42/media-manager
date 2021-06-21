@@ -1,27 +1,16 @@
-buildscript {
-    dependencies {
-        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.15'
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
-    }
-}
-
 plugins {
-	id 'org.springframework.boot' version '2.1.4.RELEASE'
-	id 'org.jetbrains.kotlin.jvm' version '1.3.21'
-	id 'org.jetbrains.kotlin.plugin.spring' version '1.3.21'
+    id 'org.springframework.boot' version '2.5.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+	id 'org.jetbrains.kotlin.plugin.spring' version '1.5.10'
 	id 'groovy'
-    id 'org.asciidoctor.convert' version "1.5.9.2"
+    id 'org.asciidoctor.jvm.convert' version '3.3.0'
+    id 'info.solidsoft.pitest' version '1.5.1'
 }
-
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'kotlin'
-apply plugin: 'org.asciidoctor.convert'
-apply plugin: 'info.solidsoft.pitest'
-// TODO analyzeDependencies plugin
 
 group = 'de.jkrech'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -35,6 +24,7 @@ sourceSets {
 
 dependencies {
 	// spring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 //    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
@@ -45,7 +35,7 @@ dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 	
 	// axon
-	implementation("org.axonframework:axon-spring-boot-starter:4.1.1") {
+	implementation("org.axonframework:axon-spring-boot-starter:4.5.2") {
         exclude group: 'org.axonframework', module: 'axon-server-connector'
     }
     
@@ -53,45 +43,52 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
     
     // axon test
-	testImplementation 'org.axonframework:axon-test:4.1.1'
+	testImplementation 'org.axonframework:axon-test:4.5.2'
     
 	// groovy, spock
-	testImplementation 'org.codehaus.groovy:groovy'
-	testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
-    testImplementation 'org.spockframework:spock-spring:1.3-groovy-2.5'
-    testImplementation( 'com.athaydes:spock-reports:1.6.2' ) {
-        transitive = false
-    }
+    testImplementation group: 'org.codehaus.groovy', name: 'groovy', version: '3.0.8'
+    testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.0-groovy-3.0'
+    testImplementation group: 'org.spockframework', name: 'spock-spring', version: '2.0-groovy-3.0'
 
-    runtime 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2:1.4.197'
 }
 
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ['-Xjsr305=strict']
-		jvmTarget = '1.8'
+		jvmTarget = '11'
 	}
 }
 
 asciidoctor {
     dependsOn 'build'
-    backends = ['html5', 'pdf']
+
+    baseDirFollowsSourceFile()
+
+    sourceDir  file('src/docs/asciidoc')
+    //backends = ['html5', 'pdf']
     sources {
-      include 'mediamanager.adoc'
+        include 'mediamanager.adoc'
     }
-    outputDir "${buildDir}/docs"
+    outputDir  file("build/docs")
 }
 
 test {
+    useJUnitPlatform()
     systemProperty 'com.athaydes.spockframework.report.showCodeBlocks', false
 }
 
 pitest {
     // Bei Auskommentierung des testPlugins wird junit4 verwendet
-    // testPlugin = 'junit5'
+    testPlugin = 'junit5'
+    pitestVersion = '1.5.1'  //for Java 11 compatibility with gradle-pitest-plugin 1.3.0
+    //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
+    junit5PluginVersion = '0.12'
+
     targetClasses = ['de.jkrech.mediamanager.*']
     avoidCallsTo = ['kotlin.jvm.internal']
     threads = 4
     outputFormats = ['XML', 'HTML']
     timestampedReports = false
+    mutators = ['STRONGER']	// groups: OLD_DEFAULTS, DEFAULTS, STRONGER, ALL
 }
