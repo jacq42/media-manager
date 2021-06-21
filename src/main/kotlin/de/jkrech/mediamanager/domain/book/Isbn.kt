@@ -1,4 +1,4 @@
-package de.jkrech.mediamanager.domain
+package de.jkrech.mediamanager.domain.book
 
 class Isbn(val isbn: String) {
          

@@ -1,5 +1,7 @@
 package de.jkrech.mediamanager.application
 
+import de.jkrech.mediamanager.domain.book.Book
+
 import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn
 import static de.jkrech.mediamanager.TestFactory.language
@@ -8,7 +10,7 @@ import static de.jkrech.mediamanager.TestFactory.title
 import org.axonframework.modelling.command.Aggregate
 import org.axonframework.modelling.command.Repository
 
-import de.jkrech.mediamanager.domain.Isbn
+import de.jkrech.mediamanager.domain.book.Isbn
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -18,7 +20,7 @@ class BookCommandHandlerSpec extends Specification {
     private InitializeBook initializeBookCommand = new InitializeBook(isbn)
     private UpdateBook updateBookCommand = new UpdateBook(isbn, author(), title(), language())
 
-    private Repository<BookAggregate> bookRepository = Mock()
+    private Repository<Book> bookRepository = Mock()
 
     @Shared
     private BookWriteService bookCommandHandler

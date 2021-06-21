@@ -1,6 +1,6 @@
 package de.jkrech.mediamanager
 
-import de.jkrech.mediamanager.application.BookAggregate
+import de.jkrech.mediamanager.domain.book.Book
 import org.axonframework.commandhandling.SimpleCommandBus
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway
 import org.axonframework.eventsourcing.EventSourcingRepository
@@ -34,7 +34,7 @@ open class Config {
 
     @Bean("bookEventSourcingRepository")
     @Throws(SQLException::class)
-    open fun eventSourcingRepository() : Repository<BookAggregate> {
-        return EventSourcingRepository.builder(BookAggregate::class.java).eventStore(embeddedEventStore()).build();
+    open fun eventSourcingRepository() : Repository<Book> {
+        return EventSourcingRepository.builder(Book::class.java).eventStore(embeddedEventStore()).build();
     }
 }

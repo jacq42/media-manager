@@ -1,5 +1,6 @@
 package de.jkrech.mediamanager.application
 
+import de.jkrech.mediamanager.domain.book.Book
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.Repository
 import org.springframework.beans.factory.annotation.Autowired
@@ -7,23 +8,19 @@ import org.springframework.stereotype.Service
 import org.axonframework.modelling.command.Aggregate
 
 @Service
-class BookWriteService(@Autowired bookEventSourcingRepository: Repository<BookAggregate>) {
+class BookWriteService(@Autowired bookEventSourcingRepository: Repository<Book>) {
     
-    val bookEventSourcingRepository: Repository<BookAggregate>
-    
-    init {
-        this.bookEventSourcingRepository = bookEventSourcingRepository
-    }
-    
+    val bookEventSourcingRepository: Repository<Book> = bookEventSourcingRepository
+
     @CommandHandler
     @Throws(Exception::class)
     fun initializeBook(initializeBook: InitializeBook): Boolean {
-        try {
-            bookEventSourcingRepository.newInstance({BookAggregate(initializeBook.isbn)})
-            return true
+        return try {
+            bookEventSourcingRepository.newInstance { Book(initializeBook.isbn) }
+            true
         } catch (e: Exception) {
             // TODO throw an exception?
-            return false
+            false
         }
     }
 
@@ -31,6 +28,6 @@ class BookWriteService(@Autowired bookEventSourcingRepository: Repository<BookAg
     @Throws(Exception::class)
     fun updateBook(updateBook: UpdateBook) {
         bookEventSourcingRepository.load(updateBook.isbn.toString())
-            .invoke { book -> book.update(updateBook) }
+            .execute { book -> book.update(updateBook) }
     }
 }
