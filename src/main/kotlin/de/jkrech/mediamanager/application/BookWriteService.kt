@@ -5,7 +5,6 @@ import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.Repository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.axonframework.modelling.command.Aggregate
 
 @Service
 class BookWriteService(@Autowired bookEventSourcingRepository: Repository<Book>) {
@@ -26,8 +25,12 @@ class BookWriteService(@Autowired bookEventSourcingRepository: Repository<Book>)
 
     @CommandHandler
     @Throws(Exception::class)
-    fun updateBook(updateBook: UpdateBook) {
-        bookEventSourcingRepository.load(updateBook.isbn.toString())
-            .execute { book -> book.update(updateBook) }
+    fun updateBook(updateBook: UpdateBook): Boolean {
+        return try {
+            bookEventSourcingRepository.load(updateBook.isbn.isbn).execute { book -> book.update(updateBook) }
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }
