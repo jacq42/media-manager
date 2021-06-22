@@ -32,6 +32,14 @@ class BookSpec extends Specification {
         isbn == book.isbn
     }
 
+    def "should fail"() {
+        when:
+        initializeBook()
+
+        then:
+        isbn != book.isbn
+    }
+
     def "the values of a book can be updated"() {
         given: "an initialized book"
         initializeBook()
