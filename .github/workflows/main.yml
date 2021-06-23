@@ -3,7 +3,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events not only for the master branch
   push:
-    branches: [ master, updateEndpoint ]
+    branches: [ master, readmodelUpdate ]
   pull_request:
     branches: [ master ]
 

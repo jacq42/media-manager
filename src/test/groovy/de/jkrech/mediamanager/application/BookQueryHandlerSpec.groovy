@@ -1,5 +1,9 @@
 package de.jkrech.mediamanager.application
 
+import de.jkrech.mediamanager.TestFactory
+import de.jkrech.mediamanager.domain.Author
+import de.jkrech.mediamanager.domain.book.BookInitialized
+
 import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn
 import static de.jkrech.mediamanager.TestFactory.language
@@ -17,26 +21,37 @@ import spock.lang.Specification
 
 class BookQueryHandlerSpec extends Specification {
 
-    private Isbn isbn = isbn()
+  private BookReadRepository bookRepository = Mock(BookReadRepository)
 
-    private BookReadRepository bookRepository = Mock(BookReadRepository)
+  @Shared
+  private BookReadService bookQueryHandler
 
-    @Shared
-    private BookReadService bookQueryHandler
+  def setup() {
+    bookQueryHandler = new BookReadService(bookRepository)
+  }
 
-    def setup() {
-        bookQueryHandler = new BookReadService(bookRepository)
-    }
+  def "a book is persisted to the repository"() {
+    when: "trigger the BookInitialized event"
+    def bookInitialized = new BookInitialized(isbn())
+    bookQueryHandler.bookInitialized(bookInitialized)
 
-    def "an existing book can be loaded from the repository"() {
-        given: "a mocked repository"
-        BookDto bookDto = new BookDto(isbn.isbn, "", "", "")
-        1 * bookRepository.findByIsbn(_) >> bookDto
+    then: "all data are persisted"
+    1 * bookRepository.save({bookDto -> bookDto.isbn == isbn().isbn})
+  }
 
-        when: "loading a book with an isbn"
-        BookJson bookJson = bookQueryHandler.bookBy(isbn)
+  def "an existing book can be loaded from the repository"() {
+    given: "a mocked repository"
+    BookDto bookDto = new BookDto(isbn().isbn, author().name, title().name, language().name())
+    1 * bookRepository.findByIsbn(_) >> bookDto
 
-        then: "we get the book"
-        bookJson.isbn == bookDto.isbn
-    }
+    when: "loading a book with an isbn"
+    BookJson bookJson = bookQueryHandler.bookBy(isbn())
+
+    then: "we get all details of the book"
+    bookJson.isbn == bookDto.isbn
+    bookJson.author == bookDto.author
+    bookJson.title == bookDto.title
+    bookJson.language == bookDto.language
+  }
+
 }
