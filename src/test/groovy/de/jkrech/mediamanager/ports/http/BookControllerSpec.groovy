@@ -1,5 +1,12 @@
 package de.jkrech.mediamanager.ports.http
 
+import de.jkrech.mediamanager.domain.book.Isbn
+import org.axonframework.commandhandling.gateway.CommandGateway
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import spock.lang.Shared
+import spock.lang.Specification
+
 import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn
 import static de.jkrech.mediamanager.TestFactory.language
@@ -7,13 +14,8 @@ import static de.jkrech.mediamanager.TestFactory.title
 import static org.springframework.http.HttpStatus.BAD_REQUEST
 import static org.springframework.http.HttpStatus.CONFLICT
 import static org.springframework.http.HttpStatus.CREATED
-
-import org.axonframework.commandhandling.gateway.CommandGateway
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-
-import spock.lang.Shared
-import spock.lang.Specification
+import static org.springframework.http.HttpStatus.NOT_FOUND
+import static org.springframework.http.HttpStatus.OK
 
 class BookControllerSpec extends Specification {
 
@@ -76,6 +78,56 @@ class BookControllerSpec extends Specification {
         then: "the status is CONFLICT"
         response.status == CONFLICT
         response.body == null
+    }
+
+    // -- PUT
+
+    def "a book can be updated"() {
+        given: "a command gateway"
+        1 * commandGateway.sendAndWait({cmd -> cmd.isbn == isbn() && cmd.author == author()}) >> true
+
+        and: "a json representation of a book"
+        BookJson jsonBook = jsonBook()
+
+        when: "put the json"
+        ResponseEntity<String> response = bookController.update(ISBN, jsonBook)
+
+        then: "a update cmd is created and successfully sent to command gateway"
+        response.status == OK
+        response.body == ISBN
+    }
+
+    def "cannot update with invalid isbn"() {
+        given: "a command gateway"
+        def invalidIsbn = "invalidIsbn"
+        0 * commandGateway.sendAndWait(_ as Isbn) >> true
+
+        and: "a json representation of a book"
+        BookJson jsonBook = jsonBook()
+
+        when: "put the json"
+        ResponseEntity<String> response = bookController.update(invalidIsbn, jsonBook)
+
+        then: "a update cmd is created and successfully sent to command gateway"
+        response.status == CONFLICT
+        response.body == invalidIsbn
+
+    }
+
+    def "cannot update with unknown isbn"() {
+        given: "a command gateway"
+        def unknownIsbn = "555-1-491-98636-3"
+        1 * commandGateway.sendAndWait({ cmd -> cmd.isbn == new Isbn(unknownIsbn) }) >> false
+
+        and: "a json representation of a book"
+        BookJson jsonBook = jsonBook()
+
+        when: "put the json"
+        ResponseEntity<String> response = bookController.update(unknownIsbn, jsonBook)
+
+        then: "a update cmd is created and successfully sent to command gateway"
+        response.status == NOT_FOUND
+        response.body == unknownIsbn
     }
 
     // -- GET

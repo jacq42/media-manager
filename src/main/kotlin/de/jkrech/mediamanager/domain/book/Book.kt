@@ -2,7 +2,6 @@ package de.jkrech.mediamanager.domain.book
 
 import de.jkrech.mediamanager.application.UpdateBook
 import de.jkrech.mediamanager.domain.Author
-import de.jkrech.mediamanager.domain.book.Isbn
 import de.jkrech.mediamanager.domain.Language
 import de.jkrech.mediamanager.domain.Title
 import org.axonframework.eventsourcing.EventSourcingHandler
@@ -24,17 +23,16 @@ open class Book() {
 
     constructor(isbn: Isbn) : this() {
         apply(BookInitialized(isbn))
-        LOGGER.info("book initialized with {}", isbn)
     }
 
     fun update(updateBook: UpdateBook) {
         apply(BookUpdated(updateBook.author, updateBook.title, updateBook.language));
-        LOGGER.info("book updated with {} {} {}", updateBook.author, updateBook.title, updateBook.language)
     }
 
     @EventSourcingHandler
     fun initialized(bookInitialized: BookInitialized) {
         this.isbn = bookInitialized.isbn
+        LOGGER.info("book initialized with {}", isbn)
     }
 
     @EventSourcingHandler

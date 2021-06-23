@@ -3,7 +3,6 @@ package de.jkrech.mediamanager.domain.book
 import de.jkrech.mediamanager.domain.Author
 import de.jkrech.mediamanager.domain.Language
 import de.jkrech.mediamanager.domain.Title
-import spock.lang.Ignore
 
 import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn
@@ -26,7 +25,7 @@ class BookSpec extends Specification {
 
     def "a book can be initialized"() {
         when: "a BookInitialized event was caught"
-        initializeBook()
+        initializeBookWithAnIsbn()
 
         then: "the isbn has been initialized"
         isbn == book.isbn
@@ -34,7 +33,7 @@ class BookSpec extends Specification {
 
     def "the values of a book can be updated"() {
         given: "an initialized book"
-        initializeBook()
+        initializeBookWithAnIsbn()
 
         when: "a BookUpdated event was caught"
         book.updated(new BookUpdated(author, title, language))
@@ -54,7 +53,7 @@ class BookSpec extends Specification {
 
     def "the isbn can not be changed"() {
         given: "an initialized book"
-        initializeBook()
+        initializeBookWithAnIsbn()
 
         when: "a BookUpdated event was caught"
         book.updated(new BookUpdated(author, title, language))
@@ -63,7 +62,7 @@ class BookSpec extends Specification {
         isbn == book.isbn
     }
 
-    private def initializeBook() {
+    private def initializeBookWithAnIsbn() {
         book.initialized(new BookInitialized(isbn))
     }
 }
