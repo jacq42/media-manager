@@ -1,12 +1,13 @@
 plugins {
-    id 'org.springframework.boot' version '2.5.0'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'org.jetbrains.kotlin.jvm' version '1.5.10'
-	id 'org.jetbrains.kotlin.plugin.spring' version '1.5.10'
-	id 'groovy'
-    id 'idea'
-    id 'org.asciidoctor.jvm.convert' version '3.3.0'
-    id 'info.solidsoft.pitest' version '1.5.1'
+  id 'org.springframework.boot' version '2.5.0'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+  id 'org.jetbrains.kotlin.plugin.spring' version '1.5.10'
+  id 'org.jetbrains.kotlin.plugin.jpa' version '1.5.10'
+  id 'groovy'
+  id 'idea'
+  id 'org.asciidoctor.jvm.convert' version '3.3.0'
+  id 'info.solidsoft.pitest' version '1.5.1'
 }
 
 group = 'de.jkrech'
@@ -15,12 +16,12 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
-	mavenCentral()
+  mavenCentral()
 }
 
 sourceSets {
-    main.kotlin.srcDirs += 'src/main/kotlin'
-    test.groovy.srcDirs += 'src/test/groovy'
+  main.kotlin.srcDirs += 'src/main/kotlin'
+  test.groovy.srcDirs += 'src/test/groovy'
 }
 
 def axonVersion = '4.5.2'
@@ -29,76 +30,77 @@ def spockVersion = '2.0-groovy-3.0'
 def spockReportsVersion = '2.0-groovy-3.0'
 
 dependencies {
-	// spring
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  // spring
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 //    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	
-	// kotlin
-	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
-	implementation 'org.jetbrains.kotlin:kotlin-reflect'
-	implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-	
-	// axon
-	implementation("org.axonframework:axon-spring-boot-starter:${axonVersion}") {
-        exclude group: 'org.axonframework', module: 'axon-server-connector'
-    }
-    
-	// test
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    
-    // axon test
-	testImplementation "org.axonframework:axon-test:${axonVersion}"
-    
-	// groovy, spock
-    testImplementation "org.codehaus.groovy:groovy-all:${groovyVersion}"
-    testImplementation "org.spockframework:spock-core:${spockVersion}"
-    testImplementation "org.spockframework:spock-spring:${spockVersion}"
-    testImplementation( "com.athaydes:spock-reports:${spockReportsVersion}" ) {
-        transitive = false // this avoids affecting your version of Groovy/Spock
-    }
 
-    runtimeOnly 'com.h2database:h2:1.4.197'
+  // kotlin
+  implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+  implementation 'org.jetbrains.kotlin:kotlin-reflect'
+  implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+
+  // axon
+  implementation("org.axonframework:axon-spring-boot-starter:${axonVersion}") {
+    exclude group: 'org.axonframework', module: 'axon-server-connector'
+  }
+
+  // test
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+  // axon test
+  testImplementation "org.axonframework:axon-test:${axonVersion}"
+
+  // groovy, spock
+  testImplementation "org.codehaus.groovy:groovy-all:${groovyVersion}"
+  testImplementation "org.spockframework:spock-core:${spockVersion}"
+  testImplementation "org.spockframework:spock-spring:${spockVersion}"
+  testImplementation("com.athaydes:spock-reports:${spockReportsVersion}") {
+    transitive = false // this avoids affecting your version of Groovy/Spock
+  }
+
+  runtimeOnly 'com.h2database:h2'
 }
 
 compileKotlin {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-    kotlinOptions {
-		freeCompilerArgs = ['-Xjsr305=strict']
-		jvmTarget = JavaVersion.VERSION_11
-	}
+  sourceCompatibility = JavaVersion.VERSION_11
+  targetCompatibility = JavaVersion.VERSION_11
+  kotlinOptions {
+    freeCompilerArgs = ['-Xjsr305=strict']
+    jvmTarget = JavaVersion.VERSION_11
+  }
 }
 
 asciidoctor {
-    dependsOn 'build'
+  dependsOn 'build'
 
-    baseDirFollowsSourceFile()
+  baseDirFollowsSourceFile()
 
-    sourceDir  file('src/docs/asciidoc')
-    //backends = ['html5', 'pdf']
-    sources {
-        include 'mediamanager.adoc'
-    }
-    outputDir  file("build/docs")
+  sourceDir file('src/docs/asciidoc')
+  //backends = ['html5', 'pdf']
+  sources {
+    include 'mediamanager.adoc'
+  }
+  outputDir file("build/docs")
 }
 
 test {
-    useJUnitPlatform()
+  useJUnitPlatform()
 }
 
 pitest {
-    // Bei Auskommentierung des testPlugins wird junit4 verwendet
-    testPlugin = 'junit5'
-    pitestVersion = '1.5.1'  //for Java 11 compatibility with gradle-pitest-plugin 1.3.0
-    //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
-    junit5PluginVersion = '0.12'
+  // Bei Auskommentierung des testPlugins wird junit4 verwendet
+  testPlugin = 'junit5'
+  pitestVersion = '1.5.1'  //for Java 11 compatibility with gradle-pitest-plugin 1.3.0
+  //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
+  junit5PluginVersion = '0.12'
 
-    targetClasses = ['de.jkrech.mediamanager.*']
-    avoidCallsTo = ['kotlin.jvm.internal']
-    threads = 4
-    outputFormats = ['XML', 'HTML']
-    timestampedReports = false
-    mutators = ['STRONGER']	// groups: OLD_DEFAULTS, DEFAULTS, STRONGER, ALL
+  targetClasses = ['de.jkrech.mediamanager.*']
+  avoidCallsTo = ['kotlin.jvm.internal']
+  threads = 4
+  outputFormats = ['XML', 'HTML']
+  timestampedReports = false
+  mutators = ['STRONGER']  // groups: OLD_DEFAULTS, DEFAULTS, STRONGER, ALL
 }
+

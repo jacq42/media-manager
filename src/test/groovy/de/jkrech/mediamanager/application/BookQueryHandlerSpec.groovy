@@ -1,22 +1,17 @@
 package de.jkrech.mediamanager.application
 
-import de.jkrech.mediamanager.TestFactory
-import de.jkrech.mediamanager.domain.Author
 import de.jkrech.mediamanager.domain.book.BookInitialized
 import de.jkrech.mediamanager.domain.book.BookUpdated
+import org.junit.jupiter.api.BeforeAll
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoSettings
 
 import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn
 import static de.jkrech.mediamanager.TestFactory.language
 import static de.jkrech.mediamanager.TestFactory.title
 
-import org.axonframework.modelling.command.Aggregate
-import org.axonframework.modelling.command.Repository
-
-import de.jkrech.mediamanager.application.BookDto
 import de.jkrech.mediamanager.ports.http.BookJson
-import de.jkrech.mediamanager.domain.book.Isbn
-
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -45,10 +40,10 @@ class BookQueryHandlerSpec extends Specification {
   def "an existing book can be loaded from the repository"() {
     given: "a mocked repository"
     BookDto bookDto = new BookDto(isbn().isbn, author().name, title().name, language().name())
-    1 * bookRepository.findByIsbn(_) >> bookDto
+    1 * bookRepository.findByIsbn(_) >> Optional.of(bookDto)
 
     when: "loading a book with an isbn"
-    BookJson bookJson = bookQueryHandler.bookBy(isbn())
+    BookJson bookJson = bookQueryHandler.bookBy(isbn()).get()
 
     then: "we get all details of the book"
     bookJson.isbn == bookDto.isbn

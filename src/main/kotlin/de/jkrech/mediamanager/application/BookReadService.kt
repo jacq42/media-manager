@@ -10,6 +10,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 private val String.Companion.EMPTY: String get() = ""
 
@@ -17,33 +18,37 @@ private val String.Companion.EMPTY: String get() = ""
  * Contains the read model
  */
 @Service
-class BookReadService(@Autowired val bookReadRepository: BookReadRepository) {
-
-  @QueryHandler
-  fun bookBy(isbn: Isbn): BookJson {
-    val bookDto = bookReadRepository.findByIsbn(isbn)
-    return toBook(bookDto)
-  }
+class BookReadService @Autowired constructor(val bookReadRepository: BookReadRepository) {
 
   @EventHandler
   fun bookInitialized(bookInitialized: BookInitialized) {
     LOGGER.info("book initialized: {}", bookInitialized)
-    val bookDto = BookDto(bookInitialized.isbn.isbn)
+    val bookDto = BookDto(bookInitialized.isbn.isbn, String.EMPTY, String.EMPTY, String.EMPTY)
     bookReadRepository.save(bookDto)
   }
 
   @EventHandler
   fun bookUpdated(bookUpdated: BookUpdated) {
     LOGGER.info("book updated: {}", bookUpdated)
-    val author = bookUpdated.author?.name ?: String.EMPTY
-    val title = bookUpdated.title?.name ?: String.EMPTY
-    val language = bookUpdated.language?.name ?: String.EMPTY
-    val bookDto = BookDto(bookUpdated.isbn.isbn, author, title, language)
+    val authorOrEmpty = bookUpdated.author?.name ?: String.EMPTY
+    val titleOrEmpty = bookUpdated.title?.name ?: String.EMPTY
+    val languageOrEmpty = bookUpdated.language?.name ?: String.EMPTY
+    val bookDto = BookDto(bookUpdated.isbn.isbn, authorOrEmpty, titleOrEmpty, languageOrEmpty)
     bookReadRepository.save(bookDto)
   }
 
-  fun toBook(bookDto: BookDto): BookJson {
-    return BookJson(bookDto.isbn, bookDto.author, bookDto.title, bookDto.language)
+  @QueryHandler(queryName = "getBookDetails")
+  fun bookDetails(getBookDetails: GetBookDetails): Optional<BookJson> {
+    return bookBy(getBookDetails.isbn)
+  }
+
+  fun toBook(book: BookDto): BookJson {
+    return BookJson(book.isbn, book.author, book.title, book.language)
+  }
+
+  private fun bookBy(isbn: Isbn): Optional<BookJson> {
+    val optionalBookDto = bookReadRepository.findByIsbn(isbn.isbn)
+    return optionalBookDto.map(this::toBook)
   }
 
   companion object {

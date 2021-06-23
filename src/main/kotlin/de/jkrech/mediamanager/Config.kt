@@ -13,28 +13,28 @@ import org.springframework.context.annotation.Configuration
 import java.sql.SQLException
 
 @Configuration
-open class Config {
-    
-    @Bean
-    open fun commandBus() : SimpleCommandBus {
-        return SimpleCommandBus.builder().build();
-    }
+class Config {
 
-    @Bean
-    open fun commandGateway() : DefaultCommandGateway {
-        return DefaultCommandGateway.builder().commandBus(commandBus()).build();
-    }
-    
-    @Bean
-    @Throws(SQLException::class)
-    open fun embeddedEventStore() : EventStore {
-        // TODO replace with a JpaEventStorageEngine
-        return EmbeddedEventStore.builder().storageEngine(InMemoryEventStorageEngine()).build()
-    }
+  @Bean
+  fun commandBus(): SimpleCommandBus {
+    return SimpleCommandBus.builder().build()
+  }
 
-    @Bean("bookEventSourcingRepository")
-    @Throws(SQLException::class)
-    open fun eventSourcingRepository() : Repository<Book> {
-        return EventSourcingRepository.builder(Book::class.java).eventStore(embeddedEventStore()).build();
-    }
+  @Bean
+  fun commandGateway(): DefaultCommandGateway {
+    return DefaultCommandGateway.builder().commandBus(commandBus()).build()
+  }
+
+  @Bean
+  @Throws(SQLException::class)
+  fun embeddedEventStore(): EventStore {
+    // TODO replace with a JpaEventStorageEngine
+    return EmbeddedEventStore.builder().storageEngine(InMemoryEventStorageEngine()).build()
+  }
+
+  @Bean("bookEventSourcingRepository")
+  @Throws(SQLException::class)
+  fun eventSourcingRepository(): Repository<Book> {
+    return EventSourcingRepository.builder(Book::class.java).eventStore(embeddedEventStore()).build()
+  }
 }
