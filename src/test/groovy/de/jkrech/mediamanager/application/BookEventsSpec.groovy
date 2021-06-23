@@ -25,7 +25,7 @@ import spock.lang.Specification
  */
 class BookEventsSpec extends Specification {
 
-    private FixtureConfiguration<Book> fixture;
+    private FixtureConfiguration<Book> fixture
 
     private Isbn isbn = isbn()
     private Author author = author()
@@ -58,7 +58,7 @@ class BookEventsSpec extends Specification {
         then: "we get a BookUpdated event"
         fixtureGivenWhen
             .expectSuccessfulHandlerExecution()
-            .expectEvents(new BookUpdated(author, title, language))
+            .expectEvents(new BookUpdated(isbn, author, title, language))
     }
 
     def "update without initialize should fail"() {

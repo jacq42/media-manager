@@ -36,7 +36,7 @@ class BookSpec extends Specification {
         initializeBookWithAnIsbn()
 
         when: "a BookUpdated event was caught"
-        book.updated(new BookUpdated(author, title, language))
+        book.updated(new BookUpdated(isbn, author, title, language))
 
         then: "the author has been updated"
         book.author != null
@@ -56,10 +56,10 @@ class BookSpec extends Specification {
         initializeBookWithAnIsbn()
 
         when: "a BookUpdated event was caught"
-        book.updated(new BookUpdated(author, title, language))
+        book.updated(new BookUpdated(new Isbn("555-1-491-98636-3"), author, title, language))
 
         then: "the isbn is the same"
-        isbn == book.isbn
+        book.isbn == isbn
     }
 
     private def initializeBookWithAnIsbn() {

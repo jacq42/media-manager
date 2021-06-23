@@ -12,7 +12,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
 
 @Aggregate
-open class Book() {
+class Book() {
 
     @AggregateIdentifier
     lateinit var isbn: Isbn
@@ -26,7 +26,7 @@ open class Book() {
     }
 
     fun update(updateBook: UpdateBook) {
-        apply(BookUpdated(updateBook.author, updateBook.title, updateBook.language));
+        apply(BookUpdated(updateBook.isbn, updateBook.author, updateBook.title, updateBook.language))
     }
 
     @EventSourcingHandler
