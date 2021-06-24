@@ -1,3 +1,5 @@
+[![CI](https://github.com/jacq42/media-manager/actions/workflows/main.yml/badge.svg)](https://github.com/jacq42/media-manager/actions/workflows/main?query=branch%3Amaster++)
+
 # Media Manager
 
 * build: gradle clean asciidoctor
