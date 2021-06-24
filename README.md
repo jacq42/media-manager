@@ -3,6 +3,7 @@
 * build: gradle clean asciidoctor
 * run with debug: gradle bootRun --debug-jvm
 * pitest: gradle pitest
+* archUnit: gradle clean architectureTest
 
 ## Nützliche Links:
 

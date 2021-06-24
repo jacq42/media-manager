@@ -111,3 +111,17 @@ pitest {
   mutators = ['STRONGER']  // groups: OLD_DEFAULTS, DEFAULTS, STRONGER, ALL
 }
 
+tasks.withType(Test) { Test task ->
+  task.useJUnitPlatform {
+    excludeTags 'architecture'
+  }
+}
+
+task architectureTest(type: Test) { Test task ->
+  task.useJUnitPlatform { JUnitPlatformOptions options ->
+    options.includeTags 'architecture'
+  }
+  task.mustRunAfter tasks.test
+}
+
+
