@@ -1,6 +1,5 @@
 package de.jkrech.mediamanager.domain.book
 
-import de.jkrech.mediamanager.application.UpdateBook
 import de.jkrech.mediamanager.domain.Author
 import de.jkrech.mediamanager.domain.Language
 import de.jkrech.mediamanager.domain.Title
@@ -12,7 +11,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
 
 @Aggregate
-open class Book() {
+class Book() {
 
     @AggregateIdentifier
     lateinit var isbn: Isbn
@@ -26,7 +25,7 @@ open class Book() {
     }
 
     fun update(updateBook: UpdateBook) {
-        apply(BookUpdated(updateBook.author, updateBook.title, updateBook.language));
+        apply(BookUpdated(updateBook.isbn, updateBook.author, updateBook.title, updateBook.language))
     }
 
     @EventSourcingHandler

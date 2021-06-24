@@ -1,13 +1,16 @@
 package de.jkrech.mediamanager.ports.http
 
-import de.jkrech.mediamanager.application.InitializeBook
-import de.jkrech.mediamanager.application.UpdateBook
+import de.jkrech.mediamanager.application.BookDto
+import de.jkrech.mediamanager.application.GetBookDetails
 import de.jkrech.mediamanager.domain.Author
 import de.jkrech.mediamanager.domain.Language
 import de.jkrech.mediamanager.domain.Title
+import de.jkrech.mediamanager.domain.book.InitializeBook
 import de.jkrech.mediamanager.domain.book.InvalidIsbnException
 import de.jkrech.mediamanager.domain.book.Isbn
+import de.jkrech.mediamanager.domain.book.UpdateBook
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.queryhandling.QueryGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,60 +31,70 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/books")
-class BookController @Autowired constructor(
-    val commandGateway: CommandGateway) {
-    
-    @PostMapping
-    fun create(@RequestBody bookJson: BookJson): ResponseEntity<String> {
-        try {
-            val isbn = Isbn(bookJson.isbn)
-            val initializeBookCmd = InitializeBook(isbn)
-            val result: Boolean = commandGateway.sendAndWait(initializeBookCmd)
-            if (result) return ResponseEntity(isbn.isbn, CREATED)
-        } catch(e: InvalidIsbnException) {
-            LOGGER.error("Book is not created: ", e)
-        }
-        return ResponseEntity(CONFLICT)
-    }
-    
-    @PutMapping(path = ["{isbnAsString}"])
-    fun update(
-        @PathVariable isbnAsString: String,
-        @RequestBody bookJson: BookJson): ResponseEntity<String> {
+class BookController constructor(
+  @Autowired val commandGateway: CommandGateway,
+  @Autowired val queryGateway: QueryGateway
+) {
 
-        try {
-            val isbn = Isbn(isbnAsString)
-            var author = bookJson.author?.let { Author(it) }
-            var title = bookJson.title?.let { Title(it) }
-            var language = bookJson.language?.let { Language.valueOf(it) }
-            val updateBook = UpdateBook(isbn, author, title, language)
-            val result: Boolean = commandGateway.sendAndWait(updateBook)
-            if (result) return ResponseEntity(isbn.isbn, OK)
-        } catch( e: InvalidIsbnException) {
-            LOGGER.error("Could not update book", e)
-            return ResponseEntity("$isbnAsString", CONFLICT)
-        }
-        return ResponseEntity("$isbnAsString", NOT_FOUND)
+  @PostMapping
+  fun create(@RequestBody bookJson: BookJson): ResponseEntity<String> {
+    try {
+      val isbn = Isbn(bookJson.isbn)
+      val initializeBookCmd = InitializeBook(isbn)
+      val result: Boolean = commandGateway.sendAndWait(initializeBookCmd)
+      if (result) return ResponseEntity(isbn.isbn, CREATED)
+    } catch (e: InvalidIsbnException) {
+      LOGGER.error("Book is not created: ", e)
     }
-    
-    @GetMapping("{isbnAsString}")
-    fun get(@PathVariable isbnAsString: String): ResponseEntity<BookJson> {
-        // TODO klären: readService direkt oder QueryBus? -> QueryBus, denn der readService lädt das Aggregate mit allen Events
-        try {
-          val isbn = Isbn(isbnAsString)
-          return ResponseEntity(BookJson(isbn.isbn, "", "", ""), NOT_IMPLEMENTED)
-        } catch (e: InvalidIsbnException) {
-          LOGGER.error("Invalid isbn {}", isbnAsString)
-        }
-        return ResponseEntity(BAD_REQUEST)
+    return ResponseEntity(CONFLICT)
+  }
+
+  @PutMapping(path = ["{isbnAsString}"])
+  fun update(
+    @PathVariable isbnAsString: String,
+    @RequestBody bookJson: BookJson
+  ): ResponseEntity<String> {
+
+    try {
+      // TODO Mapper für: UpdateBook aus BookJson generieren
+      val isbn = Isbn(isbnAsString)
+      val author = bookJson.author?.let { Author(it) }
+      val title = bookJson.title?.let { Title(it) }
+      val language = bookJson.language?.let { Language.valueOf(it) }
+      val updateBook = UpdateBook(isbn, author, title, language)
+      val result: Boolean = commandGateway.sendAndWait(updateBook)
+      if (result) return ResponseEntity(isbn.isbn, OK)
+    } catch (e: InvalidIsbnException) {
+      LOGGER.error("Could not update book", e)
+      return ResponseEntity("$isbnAsString", CONFLICT)
     }
-    
-    @GetMapping
-    fun getAll(): ResponseEntity<List<String>> {
-        return ResponseEntity(NOT_IMPLEMENTED)
+    return ResponseEntity("$isbnAsString", NOT_FOUND)
+  }
+
+  @GetMapping("{isbnAsString}")
+  fun get(@PathVariable isbnAsString: String): ResponseEntity<BookJson> {
+    try {
+      val isbn = Isbn(isbnAsString)
+      val getBookDetails = GetBookDetails(isbn)
+      val queryResponse = queryGateway.query("getBookDetails", getBookDetails, BookDto::class.java)
+      val bookDto = queryResponse.get()
+      return ResponseEntity(fromBookDto(bookDto), OK)
+    } catch (e: InvalidIsbnException) {
+      LOGGER.error("Invalid isbn {}", isbnAsString)
     }
-    
-    companion object {
-        val LOGGER: Logger = LoggerFactory.getLogger(BookController::class.java)
-    }
+    return ResponseEntity(BAD_REQUEST)
+  }
+
+  @GetMapping
+  fun getAll(): ResponseEntity<List<String>> {
+    return ResponseEntity(NOT_IMPLEMENTED)
+  }
+
+  private fun fromBookDto(bookDto: BookDto): BookJson {
+    return BookJson(bookDto.isbn, bookDto.author, bookDto.title, bookDto.language)
+  }
+
+  companion object {
+    val LOGGER: Logger = LoggerFactory.getLogger(BookController::class.java)
+  }
 }

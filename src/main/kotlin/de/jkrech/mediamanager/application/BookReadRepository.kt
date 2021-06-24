@@ -1,15 +1,14 @@
 package de.jkrech.mediamanager.application
 
-import de.jkrech.mediamanager.domain.book.Isbn
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.NoRepositoryBean
-import org.springframework.data.repository.Repository
 import org.springframework.lang.Nullable
+import java.util.*
 
 @NoRepositoryBean
-interface BookReadRepository : Repository<BookDto, Isbn> {
-    
-    @Nullable
-    fun findByIsbn(isbn: Isbn): BookDto
-    
-    fun save(book: BookDto): BookDto
+interface BookReadRepository : JpaRepository<BookDto, String> {
+
+  @Nullable
+  fun findByIsbn(isbn: String): Optional<BookDto>
+
 }
