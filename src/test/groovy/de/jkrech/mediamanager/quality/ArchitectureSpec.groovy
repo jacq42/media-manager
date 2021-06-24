@@ -7,6 +7,7 @@ import com.tngtech.archunit.junit.AnalyzeClasses
 import com.tngtech.archunit.junit.ArchTest
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition
 import com.tngtech.archunit.library.Architectures
+import com.tngtech.archunit.library.dependencies.SlicesRuleDefinition
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RestController
 
@@ -33,7 +34,7 @@ class ArchitectureSpec {
     when:
     def rule = ArchRuleDefinition.classes().that().areAnnotatedWith(Service)
         .should().resideInAPackage("..application..")
-        .as("rest controller are adapters")
+        .as("application services")
 
     then:
     rule.check(importedClasses)
@@ -52,9 +53,20 @@ class ArchitectureSpec {
         .whereLayer("application").mayOnlyBeAccessedByLayers("ports")
         .whereLayer("domain").mayOnlyBeAccessedByLayers("application", "ports", "config")
 
-        .as("Hexagonale Architektur sicherstellen");
+        .as("ensure hexagonal architecture");
 
     then:
     rule.check(importedClasses)
+  }
+
+  @ArchTest
+  def "there should be no cycles"(JavaClasses importedClasses) {
+    when:
+    def rule = SlicesRuleDefinition.slices().matching(IMPORT_PACKAGE + ".(*)..")
+        .should().beFreeOfCycles()
+        .as("free of cycles");
+
+    then:
+    rule.check(importedClasses);
   }
 }
