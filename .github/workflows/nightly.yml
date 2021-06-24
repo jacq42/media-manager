@@ -1,0 +1,28 @@
+name: Nightly Build
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: '33 3 * * *'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    name: architecture and mutation testing
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: gradle clean test architectureTest
+        uses: eskatos/gradle-command-action@v1.3.3
+        with:
+          arguments: clean test architectureTest
+
+      - name: gradle pitest
+        uses: eskatos/gradle-command-action@v1.3.3
+        with:
+          arguments: pitest
