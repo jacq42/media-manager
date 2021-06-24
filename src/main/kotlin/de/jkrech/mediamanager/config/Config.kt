@@ -1,4 +1,4 @@
-package de.jkrech.mediamanager
+package de.jkrech.mediamanager.config
 
 import de.jkrech.mediamanager.domain.book.Book
 import org.axonframework.commandhandling.SimpleCommandBus

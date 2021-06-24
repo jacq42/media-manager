@@ -28,6 +28,7 @@ def axonVersion = '4.5.2'
 def groovyVersion = '3.0.8'
 def spockVersion = '2.0-groovy-3.0'
 def spockReportsVersion = '2.0-groovy-3.0'
+def archUnitVersion = '0.19.0'
 
 dependencies {
   // spring
@@ -60,6 +61,12 @@ dependencies {
     transitive = false // this avoids affecting your version of Groovy/Spock
   }
 
+  // quality
+  testImplementation "com.tngtech.archunit:archunit:${archUnitVersion}"
+  testImplementation "com.tngtech.archunit:archunit-junit5:${archUnitVersion}"
+  testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archUnitVersion}"
+
+  // persistence
   runtimeOnly 'com.h2database:h2'
 }
 
