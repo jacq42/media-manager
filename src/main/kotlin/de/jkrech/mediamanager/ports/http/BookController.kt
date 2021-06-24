@@ -1,13 +1,14 @@
 package de.jkrech.mediamanager.ports.http
 
+import de.jkrech.mediamanager.application.BookDto
 import de.jkrech.mediamanager.application.GetBookDetails
-import de.jkrech.mediamanager.application.InitializeBook
-import de.jkrech.mediamanager.application.UpdateBook
 import de.jkrech.mediamanager.domain.Author
 import de.jkrech.mediamanager.domain.Language
 import de.jkrech.mediamanager.domain.Title
+import de.jkrech.mediamanager.domain.book.InitializeBook
 import de.jkrech.mediamanager.domain.book.InvalidIsbnException
 import de.jkrech.mediamanager.domain.book.Isbn
+import de.jkrech.mediamanager.domain.book.UpdateBook
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
 import org.slf4j.Logger
@@ -55,6 +56,7 @@ class BookController constructor(
   ): ResponseEntity<String> {
 
     try {
+      // TODO Mapper für: UpdateBook aus BookJson generieren
       val isbn = Isbn(isbnAsString)
       val author = bookJson.author?.let { Author(it) }
       val title = bookJson.title?.let { Title(it) }
@@ -74,9 +76,9 @@ class BookController constructor(
     try {
       val isbn = Isbn(isbnAsString)
       val getBookDetails = GetBookDetails(isbn)
-      val queryResponse = queryGateway.query("getBookDetails", getBookDetails, BookJson::class.java)
-      val bookJson = queryResponse.get()
-      return ResponseEntity(bookJson, OK)
+      val queryResponse = queryGateway.query("getBookDetails", getBookDetails, BookDto::class.java)
+      val bookDto = queryResponse.get()
+      return ResponseEntity(fromBookDto(bookDto), OK)
     } catch (e: InvalidIsbnException) {
       LOGGER.error("Invalid isbn {}", isbnAsString)
     }
@@ -86,6 +88,10 @@ class BookController constructor(
   @GetMapping
   fun getAll(): ResponseEntity<List<String>> {
     return ResponseEntity(NOT_IMPLEMENTED)
+  }
+
+  private fun fromBookDto(bookDto: BookDto): BookJson {
+    return BookJson(bookDto.isbn, bookDto.author, bookDto.title, bookDto.language)
   }
 
   companion object {

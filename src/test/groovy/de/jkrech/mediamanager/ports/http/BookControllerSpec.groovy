@@ -1,26 +1,18 @@
 package de.jkrech.mediamanager.ports.http
 
-import de.jkrech.mediamanager.TestFactory
+import de.jkrech.mediamanager.application.BookDto
 import de.jkrech.mediamanager.application.GetBookDetails
 import de.jkrech.mediamanager.domain.book.Isbn
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.util.concurrent.CompletableFuture
 
-import static de.jkrech.mediamanager.TestFactory.author
-import static de.jkrech.mediamanager.TestFactory.isbn
-import static de.jkrech.mediamanager.TestFactory.language
-import static de.jkrech.mediamanager.TestFactory.title
-import static org.springframework.http.HttpStatus.BAD_REQUEST
-import static org.springframework.http.HttpStatus.CONFLICT
-import static org.springframework.http.HttpStatus.CREATED
-import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.OK
+import static de.jkrech.mediamanager.TestFactory.*
+import static org.springframework.http.HttpStatus.*
 
 class BookControllerSpec extends Specification {
 
@@ -149,7 +141,7 @@ class BookControllerSpec extends Specification {
 
   def "returns a saved book"() {
     given: "a mocked query gateway"
-    1 * queryGateway.query("getBookDetails", new GetBookDetails(isbn()), BookJson.class) >> new CompletableFuture<BookJson>(jsonBook(isbn().isbn))
+    1 * queryGateway.query("getBookDetails", new GetBookDetails(isbn()), BookDto.class) >> new CompletableFuture<BookDto>(book(isbn().isbn))
 
     when: "get by isbn"
     ResponseEntity<BookJson> response = bookController.get(isbn().isbn)
@@ -160,6 +152,10 @@ class BookControllerSpec extends Specification {
   }
 
   // -- private
+
+  private BookDto book(String isbn) {
+    new BookDto(isbn, AUTHOR, TITLE, LANGUAGE)
+  }
 
   private BookJson jsonBook() {
     jsonBook(ISBN)

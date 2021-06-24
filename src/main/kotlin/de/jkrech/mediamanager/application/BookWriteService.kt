@@ -1,6 +1,8 @@
 package de.jkrech.mediamanager.application
 
 import de.jkrech.mediamanager.domain.book.Book
+import de.jkrech.mediamanager.domain.book.InitializeBook
+import de.jkrech.mediamanager.domain.book.UpdateBook
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.Repository
 import org.springframework.beans.factory.annotation.Autowired

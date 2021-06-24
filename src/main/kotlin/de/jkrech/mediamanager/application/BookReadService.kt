@@ -3,7 +3,6 @@ package de.jkrech.mediamanager.application
 import de.jkrech.mediamanager.domain.book.BookInitialized
 import de.jkrech.mediamanager.domain.book.BookUpdated
 import de.jkrech.mediamanager.domain.book.Isbn
-import de.jkrech.mediamanager.ports.http.BookJson
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.slf4j.Logger
@@ -38,17 +37,16 @@ class BookReadService @Autowired constructor(val bookReadRepository: BookReadRep
   }
 
   @QueryHandler(queryName = "getBookDetails")
-  fun bookDetails(getBookDetails: GetBookDetails): Optional<BookJson> {
+  fun bookDetails(getBookDetails: GetBookDetails): Optional<BookDto> {
     return bookBy(getBookDetails.isbn)
   }
 
-  fun toBook(book: BookDto): BookJson {
-    return BookJson(book.isbn, book.author, book.title, book.language)
-  }
+//  fun toBook(book: BookDto): BookJson {
+//    return BookJson(book.isbn, book.author, book.title, book.language)
+//  }
 
-  private fun bookBy(isbn: Isbn): Optional<BookJson> {
-    val optionalBookDto = bookReadRepository.findByIsbn(isbn.isbn)
-    return optionalBookDto.map(this::toBook)
+  private fun bookBy(isbn: Isbn): Optional<BookDto> {
+    return bookReadRepository.findByIsbn(isbn.isbn)
   }
 
   companion object {

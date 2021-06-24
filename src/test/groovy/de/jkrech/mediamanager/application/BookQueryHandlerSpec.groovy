@@ -43,13 +43,10 @@ class BookQueryHandlerSpec extends Specification {
     1 * bookRepository.findByIsbn(_) >> Optional.of(bookDto)
 
     when: "loading a book with an isbn"
-    BookJson bookJson = bookQueryHandler.bookBy(isbn()).get()
+    BookDto bookFromRepository = bookQueryHandler.bookBy(isbn()).get()
 
     then: "we get all details of the book"
-    bookJson.isbn == bookDto.isbn
-    bookJson.author == bookDto.author
-    bookJson.title == bookDto.title
-    bookJson.language == bookDto.language
+    bookFromRepository == bookDto
   }
 
   // -- update

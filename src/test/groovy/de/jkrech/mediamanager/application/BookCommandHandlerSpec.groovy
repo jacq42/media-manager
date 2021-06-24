@@ -1,6 +1,8 @@
 package de.jkrech.mediamanager.application
 
 import de.jkrech.mediamanager.domain.book.Book
+import de.jkrech.mediamanager.domain.book.InitializeBook
+import de.jkrech.mediamanager.domain.book.UpdateBook
 
 import static de.jkrech.mediamanager.TestFactory.author
 import static de.jkrech.mediamanager.TestFactory.isbn
