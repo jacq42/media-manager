@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
 import java.sql.SQLException
 
 @Configuration
-class Config {
+class AxonConfiguration {
 
   @Bean
   fun commandBus(): SimpleCommandBus {
@@ -37,4 +37,5 @@ class Config {
   fun eventSourcingRepository(): Repository<Book> {
     return EventSourcingRepository.builder(Book::class.java).eventStore(embeddedEventStore()).build()
   }
+
 }

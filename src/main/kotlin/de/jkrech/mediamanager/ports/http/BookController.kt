@@ -9,6 +9,11 @@ import de.jkrech.mediamanager.domain.book.InitializeBook
 import de.jkrech.mediamanager.domain.book.InvalidIsbnException
 import de.jkrech.mediamanager.domain.book.Isbn
 import de.jkrech.mediamanager.domain.book.UpdateBook
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiImplicitParam
+import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
 import org.slf4j.Logger
@@ -20,6 +25,7 @@ import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.HttpStatus.NOT_IMPLEMENTED
 import org.springframework.http.HttpStatus.OK
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -29,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Api("Book handling controller")
 @RestController
 @RequestMapping("/books")
 class BookController constructor(
@@ -36,7 +43,14 @@ class BookController constructor(
   @Autowired val queryGateway: QueryGateway
 ) {
 
-  @PostMapping
+  @ApiOperation(value = "create book", response = String::class)
+  @ApiResponses(
+    value = [
+      ApiResponse(responseCode = "201", description = "OK - new book created"),
+      ApiResponse(responseCode = "409", description = "invalid isbn or other error")
+    ]
+  )
+  @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
   fun create(@RequestBody bookJson: BookJson): ResponseEntity<String> {
     try {
       val isbn = Isbn(bookJson.isbn)
@@ -49,11 +63,24 @@ class BookController constructor(
     return ResponseEntity(CONFLICT)
   }
 
-  @PutMapping(path = ["{isbnAsString}"])
+  @ApiOperation(value = "update book details", response = String::class)
+  @ApiImplicitParam(
+    name = "isbnAsString",
+    required = true,
+    example = "978-1-491-98636-3",
+    value = "(formatted) string representation of isbn"
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(responseCode = "200", description = "OK - book updated"),
+      ApiResponse(responseCode = "404", description = "book with specified isbn not found"),
+      ApiResponse(responseCode = "409", description = "invalid isbn or other error")
+    ]
+  )
+  @PutMapping(path = ["{isbnAsString}"], consumes = [MediaType.APPLICATION_JSON_VALUE])
   fun update(
     @PathVariable isbnAsString: String,
-    @RequestBody bookJson: BookJson
-  ): ResponseEntity<String> {
+    @RequestBody bookJson: BookJson): ResponseEntity<String> {
 
     try {
       // TODO Mapper für: UpdateBook aus BookJson generieren
@@ -71,7 +98,23 @@ class BookController constructor(
     return ResponseEntity("$isbnAsString", NOT_FOUND)
   }
 
-  @GetMapping("{isbnAsString}")
+  @ApiOperation(value = "get book details", notes = "details of a book by isbn", response = BookJson::class)
+  @ApiImplicitParam(
+    name = "isbnAsString",
+    required = true,
+    example = "978-1-491-98636-3",
+    value = "(formatted) string representation of isbn"
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(responseCode = "200", description = "OK"),
+      ApiResponse(responseCode = "400", description = "invalid isbn or other error"),
+      ApiResponse(responseCode = "404", description = "book with specified isbn not found")
+    ]
+  )
+  @GetMapping(path = ["{isbnAsString}"],
+    produces = [MediaType.APPLICATION_JSON_VALUE]
+  )
   fun get(@PathVariable isbnAsString: String): ResponseEntity<BookJson> {
     try {
       val isbn = Isbn(isbnAsString)
@@ -81,10 +124,19 @@ class BookController constructor(
       return ResponseEntity(fromBookDto(bookDto), OK)
     } catch (e: InvalidIsbnException) {
       LOGGER.error("Invalid isbn {}", isbnAsString)
+    } catch (e: NullPointerException) {
+      LOGGER.error("Unknown isbn {}", isbnAsString)
+      return ResponseEntity(NOT_FOUND)
     }
     return ResponseEntity(BAD_REQUEST)
   }
 
+  @ApiOperation(value = "get a list of all books", response = List::class)
+  @ApiResponses(
+    value = [
+      ApiResponse(responseCode = "501", description = "Not yet implemented")
+    ]
+  )
   @GetMapping
   fun getAll(): ResponseEntity<List<String>> {
     return ResponseEntity(NOT_IMPLEMENTED)

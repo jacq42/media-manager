@@ -8,6 +8,7 @@ plugins {
   id 'idea'
   id 'org.asciidoctor.jvm.convert' version '3.3.0'
   id 'info.solidsoft.pitest' version '1.5.1'
+  id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.9'
 }
 
 group = 'de.jkrech'
@@ -29,6 +30,7 @@ def groovyVersion = '3.0.8'
 def spockVersion = '2.0-groovy-3.0'
 def spockReportsVersion = '2.0-groovy-3.0'
 def archUnitVersion = '0.19.0'
+def springFoxVersion = '3.0.0'
 
 dependencies {
   // spring
@@ -46,6 +48,10 @@ dependencies {
   implementation("org.axonframework:axon-spring-boot-starter:${axonVersion}") {
     exclude group: 'org.axonframework', module: 'axon-server-connector'
   }
+
+  // Springfox Swagger
+  implementation "io.springfox:springfox-swagger2:${springFoxVersion}"
+  implementation "io.springfox:springfox-swagger-ui:${springFoxVersion}"
 
   // test
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -111,12 +117,24 @@ pitest {
   mutators = ['STRONGER']  // groups: OLD_DEFAULTS, DEFAULTS, STRONGER, ALL
 }
 
+// openapi
+resolve {
+  outputFileName = 'MediaManagerAPI'
+  outputFormat = 'JSON'
+  prettyPrint = 'TRUE'
+  classpath = sourceSets.main.runtimeClasspath
+  resourcePackages = ['de.jkrech.mediamanager']
+  outputDir = file('build/openapi')
+}
+
+// test without architecture tests
 tasks.withType(Test) { Test task ->
   task.useJUnitPlatform {
     excludeTags 'architecture'
   }
 }
 
+// architecture test as separate task
 task architectureTest(type: Test) { Test task ->
   task.useJUnitPlatform { JUnitPlatformOptions options ->
     options.includeTags 'architecture'
