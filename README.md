@@ -3,10 +3,17 @@
 
 # Media Manager
 
+Gradle Tasks:
 * build: gradle clean asciidoctor
 * run with debug: gradle bootRun --debug-jvm
 * pitest: gradle pitest
 * archUnit: gradle clean architectureTest
+* openAPI: gradle resolve
+
+Lokales Testen:
+* baseurl: localhost:8080 
+* swagger: API erreichbar unter /api/v1/api-docs (siehe swagger.properties)
+* postman collection unter /src/docs/postman
 
 ## Nützliche Links:
 
@@ -37,9 +44,14 @@ Mutation Testing
 * http://pitest.org/
 * https://github.com/hcoles/pitest/
 
+Architecture Testing
+* https://www.archunit.org/
+* https://github.com/TNG/ArchUnit
+
 ## Issues
 
 Kotlin und Groovy vertragen sich nicht so wirklich in einem Eclipse Projekt
 - die Sourcen von Kotlin landen nicht im bin Folder
 - Groovy kann sie dann nicht finden
 - mögliche Lösung: add kotlin nature erneut ausführen (?)
+- Lösung: Intellij verwenden
