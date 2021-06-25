@@ -1,5 +1,4 @@
 [![CI](https://github.com/jacq42/media-manager/actions/workflows/main.yml/badge.svg)](https://github.com/jacq42/media-manager/actions/workflows/main?query=branch%3Amaster++)
-
 [![Nightly](https://github.com/jacq42/media-manager/actions/workflows/nightly.yml/badge.svg)](https://github.com/jacq42/media-manager/actions/workflows/nightly?query=branch%3Amaster++)
 
 # Media Manager
