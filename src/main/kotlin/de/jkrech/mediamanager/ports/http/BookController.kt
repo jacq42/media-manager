@@ -2,6 +2,7 @@ package de.jkrech.mediamanager.ports.http
 
 import de.jkrech.mediamanager.application.BookDto
 import de.jkrech.mediamanager.application.GetBookDetails
+import de.jkrech.mediamanager.application.GetBookList
 import de.jkrech.mediamanager.domain.Author
 import de.jkrech.mediamanager.domain.Language
 import de.jkrech.mediamanager.domain.Title
@@ -15,6 +16,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -23,7 +25,7 @@ import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.CONFLICT
 import org.springframework.http.HttpStatus.CREATED
 import org.springframework.http.HttpStatus.NOT_FOUND
-import org.springframework.http.HttpStatus.NOT_IMPLEMENTED
+import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -138,8 +140,20 @@ class BookController constructor(
     ]
   )
   @GetMapping
-  fun getAll(): ResponseEntity<List<String>> {
-    return ResponseEntity(NOT_IMPLEMENTED)
+  fun getAll(): ResponseEntity<List<BookJson>> {
+    try {
+      val getBookList = GetBookList("")
+      val queryResponse = queryGateway.query("getBooks", getBookList, ResponseTypes.multipleInstancesOf(BookDto::class.java))
+      val listOfBooks: List<BookDto> = queryResponse.get() as List<BookDto>
+      if (listOfBooks.isEmpty()) {
+        return ResponseEntity(NO_CONTENT)
+      }
+      val listOfBooksJson = listOfBooks.map { bookDto -> fromBookDto(bookDto) }
+      return ResponseEntity(listOfBooksJson, OK)
+    } catch (e: NullPointerException) {
+      LOGGER.error("No books found: ", e)
+    }
+    return ResponseEntity(BAD_REQUEST)
   }
 
   private fun fromBookDto(bookDto: BookDto): BookJson {

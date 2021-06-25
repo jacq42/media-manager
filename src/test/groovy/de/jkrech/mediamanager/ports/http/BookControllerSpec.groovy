@@ -2,8 +2,10 @@ package de.jkrech.mediamanager.ports.http
 
 import de.jkrech.mediamanager.application.BookDto
 import de.jkrech.mediamanager.application.GetBookDetails
+import de.jkrech.mediamanager.application.GetBookList
 import de.jkrech.mediamanager.domain.book.Isbn
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import org.springframework.http.ResponseEntity
 import spock.lang.Shared
@@ -149,6 +151,41 @@ class BookControllerSpec extends Specification {
     then: "the status is OK"
     response.status == OK
     response.body == jsonBook(isbn().isbn)
+  }
+
+  // -- GET all
+
+  def "returns NO CONTENT if there is an exception"() {
+    when: "get all books"
+    def response = bookController.getAll()
+
+    then: "there is a bad request"
+    response.status == BAD_REQUEST
+  }
+
+  def "returns NO CONTENT when books are empty"() {
+    given: "a mocked query gateway"
+    1 * queryGateway.query("getBooks", new GetBookList(""),
+        ResponseTypes.multipleInstancesOf(BookDto.class)) >> new CompletableFuture<List>(Collections.emptyList())
+
+    when: "get all books"
+    def response = bookController.getAll()
+
+    then: "there is no content"
+    response.status == NO_CONTENT
+  }
+
+  def "returns a list of all books"() {
+    given: "a mocked query gateway"
+    1 * queryGateway.query("getBooks", new GetBookList(""),
+        ResponseTypes.multipleInstancesOf(BookDto.class)) >> new CompletableFuture<List>(Arrays.asList(book(isbn().isbn)))
+
+    when: "get all books"
+    def response = bookController.getAll()
+
+    then: "there is the list of books"
+    response.status == OK
+    response.body.asList().size() == 1
   }
 
   // -- private

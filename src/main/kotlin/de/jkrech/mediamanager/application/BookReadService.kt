@@ -41,9 +41,10 @@ class BookReadService @Autowired constructor(val bookReadRepository: BookReadRep
     return bookBy(getBookDetails.isbn)
   }
 
-//  fun toBook(book: BookDto): BookJson {
-//    return BookJson(book.isbn, book.author, book.title, book.language)
-//  }
+  @QueryHandler(queryName = "getBooks")
+  fun bookList(getBookList: GetBookList): List<BookDto> {
+    return bookReadRepository.findAll()
+  }
 
   private fun bookBy(isbn: Isbn): Optional<BookDto> {
     return bookReadRepository.findByIsbn(isbn.isbn)
